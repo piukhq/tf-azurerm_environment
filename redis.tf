@@ -61,3 +61,13 @@ resource "azurerm_redis_firewall_rule" "binkhq" {
     start_ip = "194.74.152.11"
     end_ip = "194.74.152.11"
 }
+
+resource "azurerm_redis_firewall_rule" "wireguard" {
+    for_each = var.redis_config
+
+    name = "wireguard"
+    redis_cache_name = azurerm_redis_cache.redis[each.key].name
+    resource_group_name = azurerm_resource_group.rg.name
+    start_ip = "20.49.163.188"
+    end_ip = "20.49.163.188"
+}
