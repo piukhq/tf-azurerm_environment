@@ -41,3 +41,16 @@ variable storage_config {
     type = map
     default = {}
 }
+
+variable service_bus {
+    type = object({
+        sku = string
+        capacity = number
+        zone_redundant = bool
+    })
+    default = {  # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/servicebus_namespace
+        sku = "Standard"
+        capacity = 0
+        zone_redundant = false
+    }
+}

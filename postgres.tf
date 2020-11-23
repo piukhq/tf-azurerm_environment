@@ -31,26 +31,26 @@ resource "azurerm_postgresql_server" "pg" {
 }
 
 # TODO remove
-resource "azurerm_postgresql_firewall_rule" "terry_temp" {
-    for_each = var.postgres_config
+# resource "azurerm_postgresql_firewall_rule" "terry_temp" {
+#     for_each = var.postgres_config
 
-    name = "${each.value["name"]}-terry"
-    resource_group_name = azurerm_resource_group.rg.name
-    server_name = azurerm_postgresql_server.pg[each.key].name
-    start_ip_address = "82.24.92.107"
-    end_ip_address = "82.24.92.107"
-}
+#     name = "${each.value["name"]}-terry"
+#     resource_group_name = azurerm_resource_group.rg.name
+#     server_name = azurerm_postgresql_server.pg[each.key].name
+#     start_ip_address = "82.24.92.107"
+#     end_ip_address = "82.24.92.107"
+# }
 
-# If terry can have one, so can I
-resource "azurerm_postgresql_firewall_rule" "cp_temp" {
-    for_each = var.postgres_config
+# # If terry can have one, so can I
+# resource "azurerm_postgresql_firewall_rule" "cp_temp" {
+#     for_each = var.postgres_config
 
-    name = "${each.value["name"]}-cp"
-    resource_group_name = azurerm_resource_group.rg.name
-    server_name = azurerm_postgresql_server.pg[each.key].name
-    start_ip_address = "217.169.3.233"
-    end_ip_address = "217.169.3.233"
-}
+#     name = "${each.value["name"]}-cp"
+#     resource_group_name = azurerm_resource_group.rg.name
+#     server_name = azurerm_postgresql_server.pg[each.key].name
+#     start_ip_address = "217.169.3.233"
+#     end_ip_address = "217.169.3.233"
+# }
 
 resource "azurerm_key_vault_secret" "pg_individual_pass" {
     for_each = var.postgres_config
