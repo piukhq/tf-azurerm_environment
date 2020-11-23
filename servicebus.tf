@@ -21,7 +21,7 @@ resource "azurerm_key_vault_secret" "servicebus_common" {
     key_vault_id = azurerm_key_vault.infra.id
 
     tags = {
-        k8s_secret_name = "infra-servicebus-common",
+        k8s_secret_name = "azure-servicebus-common",
         k8s_namespaces = "default"
     }
 }
