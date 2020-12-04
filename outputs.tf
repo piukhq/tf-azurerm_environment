@@ -20,7 +20,3 @@ output "postgres_servers" {
 output "storage_accounts" {
     value = { for account in azurerm_storage_account.storage : account.name => account.primary_blob_connection_string }
 }
-
-output "controller_availability_set_id" {
-    value = azurerm_availability_set.controller.id
-}
