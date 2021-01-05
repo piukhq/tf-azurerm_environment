@@ -52,15 +52,15 @@ resource "azurerm_postgresql_server" "pg" {
 #     end_ip_address = "217.169.3.233"
 # }
 
-# This IP may change, will look at a better solution if this happens
-resource "azurerm_postgresql_firewall_rule" "azure_synapse" {
+# This opens up Postgres to connections from any Azure customer, we should figure out a better way of doing this
+resource "azurerm_postgresql_firewall_rule" "azure" {
     for_each = var.postgres_config
 
-    name = "${each.value["name"]}-synapse"
+    name = "${each.value["name"]}-azure"
     resource_group_name = azurerm_resource_group.rg.name
     server_name = azurerm_postgresql_server.pg[each.key].name
-    start_ip_address = "51.104.24.184"
-    end_ip_address = "51.104.24.184"
+    start_ip_address = "0.0.0.0"
+    end_ip_address = "0.0.0.0"
 }
 
 resource "azurerm_key_vault_secret" "pg_individual_pass" {
