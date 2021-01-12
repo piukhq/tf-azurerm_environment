@@ -107,6 +107,122 @@ resource "azurerm_key_vault_access_policy" "fakicorp" {
     ]
 }
 
+resource "azurerm_user_assigned_identity" "europa" {
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-europa"
+}
+
+resource "azurerm_key_vault_access_policy" "europa" {
+    key_vault_id = azurerm_key_vault.common.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_user_assigned_identity.europa.principal_id
+
+    secret_permissions = [
+        "get",
+        "list",
+        "set",
+        "delete"
+    ]
+}
+
+resource "azurerm_user_assigned_identity" "harmonia" {
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-harmonia"
+}
+
+resource "azurerm_key_vault_access_policy" "harmonia" {
+    key_vault_id = azurerm_key_vault.common.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_user_assigned_identity.harmonia.principal_id
+
+    secret_permissions = [
+        "get",
+        "list",
+    ]
+}
+
+resource "azurerm_user_assigned_identity" "hermes" {
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-hermes"
+}
+
+resource "azurerm_key_vault_access_policy" "hermes" {
+    key_vault_id = azurerm_key_vault.common.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_user_assigned_identity.hermes.principal_id
+
+    secret_permissions = [
+        "get",
+        "list",
+    ]
+}
+
+resource "azurerm_user_assigned_identity" "metis" {
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-metis"
+}
+
+resource "azurerm_key_vault_access_policy" "metis" {
+    key_vault_id = azurerm_key_vault.common.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_user_assigned_identity.metis.principal_id
+
+    secret_permissions = [
+        "get",
+        "list",
+    ]
+}
+
+resource "azurerm_user_assigned_identity" "pyqa" {
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-pyqa"
+}
+
+resource "azurerm_key_vault_access_policy" "pyqa" {
+    key_vault_id = azurerm_key_vault.common.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_user_assigned_identity.pyqa.principal_id
+
+    secret_permissions = [
+        "get",
+        "list",
+    ]
+}
+
+resource "azurerm_user_assigned_identity" "zephyrus" {
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-zephyrus"
+}
+
+resource "azurerm_key_vault_access_policy" "zephyrus" {
+    key_vault_id = azurerm_key_vault.common.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_user_assigned_identity.zephyrus.principal_id
+
+    secret_permissions = [
+        "get",
+        "list",
+    ]
+}
+
 resource "azurerm_key_vault_access_policy" "common_devops" {
     key_vault_id = azurerm_key_vault.common.id
 
