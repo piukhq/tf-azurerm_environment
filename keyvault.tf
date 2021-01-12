@@ -10,7 +10,6 @@ resource "azurerm_key_vault" "infra" {
     # All don't need much accidental delete protection as TF populates this KV
     enabled_for_disk_encryption = false
     tenant_id = data.azurerm_client_config.current.tenant_id
-    soft_delete_enabled = false
     purge_protection_enabled = false
 }
 
@@ -81,7 +80,6 @@ resource "azurerm_key_vault" "common" {
     sku_name = "standard"
     enabled_for_disk_encryption = false
     tenant_id = data.azurerm_client_config.current.tenant_id
-    soft_delete_enabled = false
     purge_protection_enabled = false
 }
 
