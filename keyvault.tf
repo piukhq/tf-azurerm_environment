@@ -27,6 +27,15 @@ resource "azurerm_monitor_diagnostic_setting" "infra_keyvault" {
             enabled = false
         }
     }
+
+    metric {
+        category = "AllMetrics"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
 }
 
 resource "azurerm_key_vault_access_policy" "infra_terraform" {
@@ -108,6 +117,15 @@ resource "azurerm_monitor_diagnostic_setting" "common_keyvault" {
     log {
         category = "AuditEvent"
         enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+
+    metric {
+        category = "AllMetrics"
+        enabled = false
         retention_policy {
             days = 0
             enabled = false

@@ -38,4 +38,13 @@ resource "azurerm_monitor_diagnostic_setting" "servicebus" {
             enabled = false
         }
     }
+
+    metric {
+        category = "AllMetrics"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
 }
