@@ -9,8 +9,6 @@ resource "azurerm_servicebus_namespace" "common" {
 }
 
 resource "azurerm_key_vault_secret" "servicebus_common" {
-    for_each = var.postgres_config
-
     name = "infra-servicebus-common"
     value = jsonencode({
         "primary_key" : azurerm_servicebus_namespace.common.default_primary_key,
@@ -23,5 +21,21 @@ resource "azurerm_key_vault_secret" "servicebus_common" {
     tags = {
         k8s_secret_name = "azure-servicebus-common",
         k8s_namespaces = "default"
+    }
+}
+
+resource "azurerm_monitor_diagnostic_setting" "servicebus" {
+    name = "logs"
+    target_resource_id = azurerm_servicebus_namespace.common.id
+    eventhub_name = "azureservicebus"
+    eventhub_authorization_rule_id = var.eventhub_authid
+
+    log {
+        category = "OperationalLogs"
+        enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
     }
 }
