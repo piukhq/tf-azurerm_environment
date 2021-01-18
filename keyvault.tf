@@ -13,6 +13,22 @@ resource "azurerm_key_vault" "infra" {
     purge_protection_enabled = false
 }
 
+resource "azurerm_monitor_diagnostic_setting" "infra_keyvault" {
+    name = "logs"
+    target_resource_id = azurerm_key_vault.infra.id
+    eventhub_name = "azurekeyvault"
+    eventhub_authorization_rule_id = var.eventhub_authid
+
+    log {
+        category = "AuditEvent"
+        enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+}
+
 resource "azurerm_key_vault_access_policy" "infra_terraform" {
     key_vault_id = azurerm_key_vault.infra.id
 
@@ -81,6 +97,22 @@ resource "azurerm_key_vault" "common" {
     enabled_for_disk_encryption = false
     tenant_id = data.azurerm_client_config.current.tenant_id
     purge_protection_enabled = false
+}
+
+resource "azurerm_monitor_diagnostic_setting" "common_keyvault" {
+    name = "logs"
+    target_resource_id = azurerm_key_vault.common.id
+    eventhub_name = "azurekeyvault"
+    eventhub_authorization_rule_id = var.eventhub_authid
+
+    log {
+        category = "AuditEvent"
+        enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
 }
 
 resource "azurerm_user_assigned_identity" "fakicorp" {

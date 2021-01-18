@@ -31,3 +31,38 @@ resource "azurerm_key_vault_secret" "storage_individual_pass" {
         k8s_namespaces = "default"
     }
 }
+
+
+resource "azurerm_monitor_diagnostic_setting" "logs" {
+    for_each = var.storage_config
+
+    name = "logs"
+    target_resource_id = "${azurerm_storage_account.storage[each.key].id}/blobServices/default"
+    eventhub_name = "azurestorage"
+    eventhub_authorization_rule_id = var.eventhub_authid
+
+    log {
+        category = "StorageRead"
+        enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+    log {
+        category = "StorageWrite"
+        enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+    log {
+        category = "StorageDelete"
+        enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+}

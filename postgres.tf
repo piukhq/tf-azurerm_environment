@@ -30,27 +30,39 @@ resource "azurerm_postgresql_server" "pg" {
     ssl_minimal_tls_version_enforced = lookup(each.value, "ssl_minimal_tls_version_enforced", "TLS1_2")
 }
 
-# TODO remove
-# resource "azurerm_postgresql_firewall_rule" "terry_temp" {
-#     for_each = var.postgres_config
+resource "azurerm_monitor_diagnostic_setting" "pg" {
+    for_each = var.postgres_config
 
-#     name = "${each.value["name"]}-terry"
-#     resource_group_name = azurerm_resource_group.rg.name
-#     server_name = azurerm_postgresql_server.pg[each.key].name
-#     start_ip_address = "82.24.92.107"
-#     end_ip_address = "82.24.92.107"
-# }
+    name = "logs"
+    target_resource_id = azurerm_postgresql_server.pg[each.key].id
+    eventhub_name = "azurepostgres"
+    eventhub_authorization_rule_id = var.eventhub_authid
 
-# # If terry can have one, so can I
-# resource "azurerm_postgresql_firewall_rule" "cp_temp" {
-#     for_each = var.postgres_config
-
-#     name = "${each.value["name"]}-cp"
-#     resource_group_name = azurerm_resource_group.rg.name
-#     server_name = azurerm_postgresql_server.pg[each.key].name
-#     start_ip_address = "217.169.3.233"
-#     end_ip_address = "217.169.3.233"
-# }
+    log {
+        category = "PostgreSQLLogs"
+        enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+    log {  # Disabled as it might send queries to redscam
+        category = "QueryStoreRuntimeStatistics"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+    log {  # Disabled as it might send queries to redscam
+        category = "QueryStoreWaitStatistics"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+}
 
 # This opens up Postgres to connections from any Azure customer, we should figure out a better way of doing this
 resource "azurerm_postgresql_firewall_rule" "azure" {
