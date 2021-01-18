@@ -33,7 +33,7 @@ resource "azurerm_key_vault_secret" "storage_individual_pass" {
 }
 
 
-resource "azurerm_monitor_diagnostic_setting" "logs" {
+resource "azurerm_monitor_diagnostic_setting" "storage" {
     for_each = var.storage_config
 
     name = "logs"
