@@ -62,6 +62,39 @@ resource "azurerm_monitor_diagnostic_setting" "pg" {
             enabled = false
         }
     }
+
+    metric {
+        category = "Errors"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+    metric {
+        category = "Latency"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+    metric {
+        category = "Saturation"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+    metric {
+        category = "Traffic"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
 }
 
 # This opens up Postgres to connections from any Azure customer, we should figure out a better way of doing this
