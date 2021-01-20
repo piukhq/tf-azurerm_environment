@@ -323,3 +323,25 @@ resource "azurerm_key_vault_access_policy" "common_users" {
         "set"
     ]
 }
+
+resource "azurerm_user_assigned_identity" "additional" {
+    for_each = var.additional_managed_identities
+
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    # Additional is a horrible name to add but it prevents clashes
+    # which cause bad things
+    name = "bink-${azurerm_resource_group.rg.name}-additional-${each.key}"
+}
+
+resource "azurerm_key_vault_access_policy" "additional" {
+    for_each = var.additional_managed_identities
+
+    key_vault_id = azurerm_key_vault.common.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_user_assigned_identity.additional[each.key].principal_id
+
+    secret_permissions = each.value["keyvault_permissions"]
+}

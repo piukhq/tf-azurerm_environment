@@ -55,3 +55,10 @@ variable service_bus {
         zone_redundant = false
     }
 }
+
+variable additional_managed_identities {
+    type = map(object({
+        keyvault_permissions = list(string)
+    }))
+    default = {}
+}
