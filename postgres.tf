@@ -108,6 +108,18 @@ resource "azurerm_postgresql_firewall_rule" "azure" {
     end_ip_address = "0.0.0.0"
 }
 
+resource "azurerm_key_vault_secret" "azure_synapse_pg_individual_pass" {
+    for_each = var.postgres_config
+
+    name = "synapse-postgres-${each.key}"
+
+    # value = "Server=${azurerm_postgresql_server.pg[each.key].fqdn};Database=TODO;Port=5432;UID=${azurerm_postgresql_server.pg[each.key].administrator_login}@${azurerm_postgresql_server.pg[each.key].name};Password=${azurerm_postgresql_server.pg[each.key].fqdn}"
+    # So its entirely possible we could store the entire DSN here, but it requires us to specify the Database explicitly which might be "*"
+    value = azurerm_postgresql_server.pg[each.key].fqdn
+    key_vault_id = azurerm_key_vault.infra.id
+
+}
+
 resource "azurerm_key_vault_secret" "pg_individual_pass" {
     for_each = var.postgres_config
 
