@@ -12,6 +12,10 @@ variable keyvault_users {
     type = map(object({ object_id = string }))
     default = {}
 }
+variable infra_keyvault_users {
+    type = map(object({ object_id = string, permissions = list(string) }))
+    default = {}
+}
 variable postgres_config {
     type = map(object({
         name = string

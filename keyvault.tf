@@ -75,6 +75,17 @@ resource "azurerm_key_vault_access_policy" "infra_devops" {
     ]
 }
 
+resource "azurerm_key_vault_access_policy" "infra_additional" {
+    for_each = var.infra_keyvault_users
+
+    key_vault_id = azurerm_key_vault.infra.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = each.value["object_id"]
+
+    secret_permissions = each.value["permissions"]
+}
+
 # Used to sync KeyVault postgres/redis/... to the cluster secrets
 resource "azurerm_user_assigned_identity" "infra_sync" {
     resource_group_name = azurerm_resource_group.rg.name
