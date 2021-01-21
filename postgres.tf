@@ -113,9 +113,9 @@ resource "azurerm_key_vault_secret" "azure_synapse_pg_individual_pass" {
 
     name = "synapse-postgres-${each.key}"
 
-    # value = "Server=${azurerm_postgresql_server.pg[each.key].fqdn};Database=TODO;Port=5432;UID=${azurerm_postgresql_server.pg[each.key].administrator_login}@${azurerm_postgresql_server.pg[each.key].name};Password=${azurerm_postgresql_server.pg[each.key].fqdn}"
+    # value = "Server=${azurerm_postgresql_server.pg[each.key].fqdn};Database=TODO;Port=5432;UID=${azurerm_postgresql_server.pg[each.key].administrator_login}@${azurerm_postgresql_server.pg[each.key].name};Password=${random_password.pg[each.key].result}"
     # So its entirely possible we could store the entire DSN here, but it requires us to specify the Database explicitly which might be "*"
-    value = azurerm_postgresql_server.pg[each.key].fqdn
+    value = random_password.pg[each.key].result
     key_vault_id = azurerm_key_vault.infra.id
 
 }
