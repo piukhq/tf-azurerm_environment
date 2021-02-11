@@ -66,3 +66,7 @@ variable additional_managed_identities {
     }))
     default = {}
 }
+
+variable "cert_manager_zone_id" {
+    type = string
+}
