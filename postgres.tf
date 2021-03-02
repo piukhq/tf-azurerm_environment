@@ -30,6 +30,16 @@ resource "azurerm_postgresql_server" "pg" {
     ssl_minimal_tls_version_enforced = lookup(each.value, "ssl_minimal_tls_version_enforced", "TLS1_2")
 }
 
+resource "azurerm_postgresql_configuration" "log_disconnections" {
+    for_each = var.postgres_config
+
+    name = "log_disconnections"
+    resource_group_name = azurerm_resource_group.rg.name
+    server_name = azurerm_postgresql_server.pg[each.key].name
+    value = "on"
+  
+}
+
 resource "azurerm_monitor_diagnostic_setting" "pg" {
     for_each = var.postgres_config
 
