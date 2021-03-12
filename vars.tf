@@ -31,9 +31,9 @@ variable redis_config {
 }
 
 variable redis_enterprise_config {
-    type = map(object{
+    type = map(object({
         name = string
-    })
+    }))
     default = {}
 }
 
