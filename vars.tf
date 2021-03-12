@@ -46,6 +46,10 @@ variable storage_config {
     type = map
     default = {}
 }
+variable storage_management_policy_config {
+    type = map
+    default = {}
+}
 
 variable service_bus {
     type = object({
