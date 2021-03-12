@@ -15,7 +15,7 @@ resource "azurerm_redis_enterprise_cluster" "redis_enterprise" {
 resource "azurerm_redis_enterprise_database" "redis_enterprise_db" {
     for_each = var.redis_enterprise_config
 
-    name = "${each.value["name"]}-common"
+    name = "default"
     resource_group_name = azurerm_resource_group.rg.name
 
     cluster_id = azurerm_redis_enterprise_cluster.redis_enterprise[each.key].id
