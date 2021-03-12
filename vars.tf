@@ -56,19 +56,6 @@ variable storage_management_policy_config {
     default = {}
 }
 
-variable service_bus {
-    type = object({
-        sku = string
-        capacity = number
-        zone_redundant = bool
-    })
-    default = {  # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/servicebus_namespace
-        sku = "Standard"
-        capacity = 0
-        zone_redundant = false
-    }
-}
-
 variable additional_managed_identities {
     type = map(object({
         keyvault_permissions = list(string)
