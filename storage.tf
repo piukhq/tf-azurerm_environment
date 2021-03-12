@@ -13,42 +13,6 @@ resource "azurerm_storage_account" "storage" {
     allow_blob_public_access = true
 }
 
-# locals {
-#     policy_rule_list = flatten([
-#         for storage_account_key, policies in var.storage_management_policy_config: [
-#             for policy in policies: {
-#                 storage_account_key = storage_account_key
-#                 name = policy.name
-#                 enabled = policy.enabled
-#                 prefix_match = policy.prefix_match
-#                 delete_after_days = policy.delete_after_days
-#             }
-#         ]
-#     ])
-# }
-
-# resource "azurerm_storage_management_policy" "storage" {
-#     for_each = {
-#         for policy_key, policy_value in local.policy_rule_list : policy_key => policy_value
-#     }
-
-#     storage_account_id = azurerm_storage_account.storage[each.value.storage_account_key].id
-
-#     rule {
-#         name    = each.value.name
-#         enabled = each.value.enabled
-#         filters {
-#             prefix_match = each.value.prefix_match
-#             blob_types   = ["blockBlob"]
-#         }
-#         actions {
-#             base_blob {
-#                 delete_after_days_since_modification_greater_than = each.value.delete_after_days
-#             }
-#         }
-#     }
-# }
-
 resource "azurerm_storage_management_policy" "storage" {
     for_each = var.storage_management_policy_config
 
