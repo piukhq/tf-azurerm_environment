@@ -6,7 +6,7 @@ resource "azurerm_user_assigned_identity" "cert_manager" {
 }
 
 resource "azurerm_role_assignment" "cert_manager" {
-  scope = var.cert_manager_zone_id
-  role_definition_name = "DNS Zone Contributor"
-  principal_id = azurerm_user_assigned_identity.cert_manager.principal_id
+    scope = var.cert_manager_zone_id
+    role_definition_name = "DNS Zone Contributor"
+    principal_id = azurerm_user_assigned_identity.cert_manager.principal_id
 }

@@ -37,7 +37,7 @@ resource "azurerm_postgresql_configuration" "log_disconnections" {
     resource_group_name = azurerm_resource_group.rg.name
     server_name = azurerm_postgresql_server.pg[each.key].name
     value = "on"
-  
+
 }
 
 resource "azurerm_monitor_diagnostic_setting" "pg" {
@@ -81,7 +81,7 @@ resource "azurerm_monitor_diagnostic_setting" "pg" {
             enabled = false
         }
     }
-    
+
 }
 
 # This opens up Postgres to connections from any Azure customer, we should figure out a better way of doing this

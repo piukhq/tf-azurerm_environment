@@ -47,7 +47,12 @@ variable storage_config {
     default = {}
 }
 variable storage_management_policy_config {
-    type = map
+    type = map(list(object({
+        name = string
+        enabled = bool
+        prefix_match = list(string)
+        delete_after_days = number
+    })))
     default = {}
 }
 
