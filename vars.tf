@@ -30,6 +30,13 @@ variable redis_config {
     default = {}
 }
 
+variable redis_enterprise_config {
+    type = map(object{
+        name = string
+    })
+    default = {}
+}
+
 # start_hour is 0 - 23 based
 variable redis_patch_schedule {
     type = object({
