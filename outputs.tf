@@ -24,13 +24,13 @@ output "storage_accounts" {
 output "private_links" {
     value = flatten([
             [ for server in keys(var.postgres_config) : {
-                private_zone = "${var.location}.privatelink.postgres.database.azure.com"
+                private_zone = "privatelink.postgres.database.azure.com"
                 name = "pg-${server}"
                 resource_id = azurerm_postgresql_server.pg[server].id
                 subresource_names = ["postgresqlServer"]
             }],
             [ for server in keys(var.redis_enterprise_config) : {
-                private_zone = "${var.location}.privatelink.redisenterprise.cache.azure.net"
+                private_zone = "privatelink.redisenterprise.cache.azure.net"
                 name = "redis-${server}"
                 resource_id = azurerm_redis_enterprise_database.redis_enterprise_db[server].id
                 subresource_names = ["redisEnterprise"]
