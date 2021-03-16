@@ -37,7 +37,7 @@ resource "azurerm_postgresql_configuration" "log_disconnections" {
     resource_group_name = azurerm_resource_group.rg.name
     server_name = azurerm_postgresql_server.pg[each.key].name
     value = "on"
-  
+
 }
 
 resource "azurerm_monitor_diagnostic_setting" "pg" {
@@ -81,7 +81,7 @@ resource "azurerm_monitor_diagnostic_setting" "pg" {
             enabled = false
         }
     }
-    
+
 }
 
 # This opens up Postgres to connections from any Azure customer, we should figure out a better way of doing this
@@ -125,7 +125,7 @@ resource "azurerm_key_vault_secret" "pg_individual_pass" {
 
     tags = {
         k8s_secret_name = "azure-pg-${each.key}"
-        k8s_namespaces = "default"
+        k8s_namespaces = "default,monitoring"
         # k8s_convert = "file:/app/templates/pgbouncer.yaml"
     }
 }
@@ -146,7 +146,7 @@ resource "azurerm_key_vault_secret" "pg_all_pass" {
 
     tags = {
         k8s_secret_name = "azure-pg-all"
-        k8s_namespaces = "default"
+        k8s_namespaces = "default,monitoring"
         k8s_convert = "file:/app/templates/pgbouncer.yaml"
     }
 }

@@ -30,6 +30,13 @@ variable redis_config {
     default = {}
 }
 
+variable redis_enterprise_config {
+    type = map(object({
+        name = string
+    }))
+    default = {}
+}
+
 # start_hour is 0 - 23 based
 variable redis_patch_schedule {
     type = object({
@@ -47,21 +54,13 @@ variable storage_config {
     default = {}
 }
 variable storage_management_policy_config {
-    type = map
+    type = map(list(object({
+        name = string
+        enabled = bool
+        prefix_match = list(string)
+        delete_after_days = number
+    })))
     default = {}
-}
-
-variable service_bus {
-    type = object({
-        sku = string
-        capacity = number
-        zone_redundant = bool
-    })
-    default = {  # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/servicebus_namespace
-        sku = "Standard"
-        capacity = 0
-        zone_redundant = false
-    }
 }
 
 variable additional_managed_identities {
