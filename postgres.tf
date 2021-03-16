@@ -24,8 +24,7 @@ resource "azurerm_postgresql_server" "pg" {
     geo_redundant_backup_enabled = lookup(each.value, "geo_redundant_backup_enabled", false)
     auto_grow_enabled = lookup(each.value, "auto_grow_enabled", false)
 
-    # public_network_access_enabled = lookup(each.value, "public_network_access_enabled", false)
-    public_network_access_enabled = true
+    public_network_access_enabled = lookup(each.value, "public_access", false)
     ssl_enforcement_enabled = lookup(each.value, "ssl_enforcement_enabled", true)
     ssl_minimal_tls_version_enforced = lookup(each.value, "ssl_minimal_tls_version_enforced", "TLS1_2")
 }
@@ -84,9 +83,13 @@ resource "azurerm_monitor_diagnostic_setting" "pg" {
 
 }
 
-# This opens up Postgres to connections from any Azure customer, we should figure out a better way of doing this
+locals {
+    # filter map to only contain those who have public access enabled
+    postgres_public_servers = { for name, data in var.postgres_config: name => data if data.public_access }
+}
+
 resource "azurerm_postgresql_firewall_rule" "azure" {
-    for_each = var.postgres_config
+    for_each = local.postgres_public_servers
 
     name = "${each.value["name"]}-azure"
     resource_group_name = azurerm_resource_group.rg.name

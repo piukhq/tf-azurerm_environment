@@ -22,6 +22,7 @@ variable postgres_config {
         databases = list(string)
         sku_name = string
         storage_gb = number
+        public_access = bool
     }))
     default = {}
 }
