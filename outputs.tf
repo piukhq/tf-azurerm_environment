@@ -32,7 +32,7 @@ output "private_links" {
             [ for server in keys(var.redis_enterprise_config) : {
                 private_zone = "privatelink.redisenterprise.cache.azure.net"
                 name = "redis-${server}"
-                resource_id = azurerm_redis_enterprise_database.redis_enterprise_db[server].id
+                resource_id = azurerm_redis_enterprise_cluster.redis_enterprise[server].id
                 subresource_names = ["redisEnterprise"]
             }],
             # [  # Dont need KeyVault endpoints atm, example of non-dynamic endpoint entry
