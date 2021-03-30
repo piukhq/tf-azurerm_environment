@@ -225,6 +225,25 @@ resource "azurerm_key_vault_access_policy" "hermes" {
     ]
 }
 
+resource "azurerm_user_assigned_identity" "polaris" {
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-polaris"
+}
+
+resource "azurerm_key_vault_access_policy" "polaris" {
+    key_vault_id = azurerm_key_vault.common.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = azurerm_user_assigned_identity.polaris.principal_id
+
+    secret_permissions = [
+        "get",
+        "list",
+    ]
+}
+
 resource "azurerm_user_assigned_identity" "metis" {
     resource_group_name = azurerm_resource_group.rg.name
     location = azurerm_resource_group.rg.location
