@@ -9,13 +9,20 @@ variable resource_group_iam {
 }
 
 variable keyvault_users {
-    type = map(object({ object_id = string }))
+    type = map(string)
     default = {}
 }
+
 variable infra_keyvault_users {
     type = map(object({ object_id = string, permissions = list(string) }))
     default = {}
 }
+
+variable additional_keyvaults {
+    type = list(string)
+    default = []
+}
+
 variable postgres_config {
     type = map(object({
         name = string
@@ -26,6 +33,12 @@ variable postgres_config {
     }))
     default = {}
 }
+
+variable secret_namespaces {
+    type = string
+    default = "default,monitoring"
+}
+
 variable redis_config {
     type = map
     default = {}
@@ -54,6 +67,7 @@ variable storage_config {
     type = map
     default = {}
 }
+
 variable storage_management_policy_config {
     type = map(list(object({
         name = string

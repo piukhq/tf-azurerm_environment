@@ -38,7 +38,7 @@ resource "azurerm_key_vault_secret" "redis_individual_pass" {
 
     tags = {
         k8s_secret_name = "azure-redis-${each.key}"
-        k8s_namespaces = "default,monitoring"
+        k8s_namespaces = var.secret_namespaces
     }
 }
 
