@@ -23,6 +23,12 @@ variable additional_keyvaults {
     default = []
 }
 
+variable managed_identities {
+    type = map(object({ kv_access = string}))
+    default = {}
+}
+
+
 variable postgres_config {
     type = map(object({
         name = string
