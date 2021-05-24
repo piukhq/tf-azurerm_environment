@@ -24,6 +24,7 @@ locals {
         midas = azurerm_user_assigned_identity.midas.principal_id,
         azuregcpvaultsync = azurerm_user_assigned_identity.azuregcpvaultsync.principal_id,
         pyqa = azurerm_user_assigned_identity.pyqa.principal_id,
+        vela = azurerm_user_assigned_identity.vela.principal_id,
         zephyrus = azurerm_user_assigned_identity.zephyrus.principal_id
     }
 }
@@ -97,6 +98,14 @@ resource "azurerm_user_assigned_identity" "pyqa" {
 
     name = "bink-${azurerm_resource_group.rg.name}-pyqa"
 }
+
+resource "azurerm_user_assigned_identity" "vela" {
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-vela"
+}
+
 
 resource "azurerm_user_assigned_identity" "zephyrus" {
     resource_group_name = azurerm_resource_group.rg.name
