@@ -1,29 +1,50 @@
 # TODO: Terry to explain what the fuck this line of code does.
 
+
 locals {
-    dynamic_admins = [ for pair in setproduct(var.additional_keyvaults, values(local.kv_admin_ids)) : { 
+    admin_map = merge(var.keyvault_users, local.kv_admin_ids)
+    admin_list = [ for name, id in local.admin_map : { name = name, id = id} ]  # Convert to list
+    msi_list = [for name, data in var.managed_identities : {name = name, id = azurerm_user_assigned_identity.app[name].principal_id, access=data.kv_access}]
+    ro_list = ["get", "list"]
+    rw_list = ["get", "list", "set", "delete"]
+    adminaccess_list = ["backup", "delete", "get", "list", "purge", "recover", "restore", "set"]
+
+    # var.additional_keyvaults = ['keyvault1', 'keyvault2']
+    # local.admin_list = [ {name = "jeff", id = "1234"}, {name = "bezos", id = "5678"}, ...]
+    # local.msi_list = [ {name = "hermes", id = "/blah/1234", kv_access="ro"},  ...]
+
+    # setproduct basically does a nested for loop, so for every item of the first list, it outputs a tuple of that item, and each item of the 2nd list
+    # e.g setproduct([a,b], [c,d,e]) => [ [a,c], [a,d], [a,e], [b,c], [b,d], [b,e] ]
+
+    dynamic_admins = { for pair in setproduct(var.additional_keyvaults, local.admin_list) : "${pair[0]}.${pair[1].name}" => { 
             kv_name = pair[0]
-            id = pair[1]
+            kv_id = azurerm_key_vault.add_kv[pair[0]].id
+            name = pair[1].name
+            id = pair[1].id
+            access = local.adminaccess_list
         }
-    ]
-    dynamic_rw = [ for pair in setproduct(var.additional_keyvaults, values(local.kv_rw_ids)) : { 
+    }
+
+    dynamic_msi = { for pair in setproduct(var.additional_keyvaults, local.msi_list) : "${pair[0]}.${pair[1].name}" => {
             kv_name = pair[0]
-            id = pair[1]
+            kv_id = azurerm_key_vault.add_kv[pair[0]].id
+            name = pair[1].name
+            id = pair[1].id
+            access = pair[1].access == "ro" ? local.ro_list : local.rw_list
         }
-    ]
-    dynamic_ro = [ for pair in setproduct(var.additional_keyvaults, values(local.kv_ro_ids)) : { 
-            kv_name = pair[0]
-            id = pair[1]
+    }
+    normal_msi = { for data in local.msi_list : data.name => {
+            name = data.name
+            id = data.id
+            access = data.access == "ro" ? local.ro_list : local.rw_list
         }
-    ]
+    }
 }
 
 resource "azurerm_key_vault" "add_kv" {
-    for_each = {
-        for item in var.additional_keyvaults : item => item 
-    }
+    for_each = toset(var.additional_keyvaults)
 
-    name = each.value
+    name = each.key
     location = azurerm_resource_group.rg.location
     resource_group_name = azurerm_resource_group.rg.name
     tags = var.tags
@@ -34,58 +55,51 @@ resource "azurerm_key_vault" "add_kv" {
     purge_protection_enabled = false
 }
 
+resource "azurerm_monitor_diagnostic_setting" "add_kv" {
+    for_each = toset(var.additional_keyvaults)
+
+    name = "logs"
+    target_resource_id = azurerm_key_vault.add_kv[each.key].id
+    eventhub_name = "azurekeyvault"
+    eventhub_authorization_rule_id = var.eventhub_authid
+
+    log {
+        category = "AuditEvent"
+        enabled = true
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+
+    metric {
+        category = "AllMetrics"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
+}
+
 resource "azurerm_key_vault_access_policy" "add_admin" {
-    for_each = {
-        for item in local.dynamic_admins : "${item.kv_name}.${item.id}" => item
-    }
+    for_each = local.dynamic_admins
 
-    key_vault_id = azurerm_key_vault.add_kv[each.value.kv_name].id
+    key_vault_id = each.value.kv_id
 
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = each.value.id
 
-    secret_permissions = [
-        "backup",
-        "delete",
-        "get",
-        "list",
-        "purge",
-        "recover",
-        "restore",
-        "set",
-    ]
+    secret_permissions = each.value.access
 }
 
-resource "azurerm_key_vault_access_policy" "add_rw" {
-    for_each = {
-        for item in local.dynamic_rw : "${item.kv_name}.${item.id}" => item
-    }
+resource "azurerm_key_vault_access_policy" "add_msi" {
+    for_each = local.dynamic_msi
 
-    key_vault_id = azurerm_key_vault.add_kv[each.value.kv_name].id
+    key_vault_id = each.value.kv_id
 
     tenant_id = data.azurerm_client_config.current.tenant_id
     object_id = each.value.id
 
-    secret_permissions = [
-        "get",
-        "list",
-        "set",
-        "delete"
-    ]
-}
-
-resource "azurerm_key_vault_access_policy" "add_ro" {
-    for_each = {
-        for item in local.dynamic_ro : "${item.kv_name}.${item.id}" => item
-    }
-
-    key_vault_id = azurerm_key_vault.add_kv[each.value.kv_name].id
-
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = each.value.id
-
-    secret_permissions = [
-        "get",
-        "list"
-    ]
+    secret_permissions = each.value.access
 }
