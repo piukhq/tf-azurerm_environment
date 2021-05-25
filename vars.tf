@@ -29,6 +29,20 @@ variable managed_identities {
 }
 
 
+variable eventhubs {
+    type = map(object({
+        name = string
+        sku = string
+        capacity = number
+        eventhubs = map(object({
+            partition_count = number
+            message_retention = number
+        }))
+    }))
+    default = {}
+}
+
+
 variable postgres_config {
     type = map(object({
         name = string
