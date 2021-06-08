@@ -12,6 +12,15 @@ resource "azurerm_key_vault" "common" {
     purge_protection_enabled = false
 }
 
+resource "azurerm_role_assignment" "keyvault_iam" {
+    for_each = var.keyvault_iam
+
+    scope = azurerm_key_vault.common.id
+    role_definition_name = each.value["role"]
+    principal_id = each.value["object_id"]
+}
+
+
 resource "azurerm_monitor_diagnostic_setting" "common_keyvault" {
     name = "logs"
     target_resource_id = azurerm_key_vault.common.id

@@ -19,33 +19,33 @@ output "storage_accounts" {
 
 output "private_links" {
     value = flatten([
-            [ for server in keys(var.postgres_config) : {
-                private_zone = "privatelink.postgres.database.azure.com"
-                name = "pg-${server}"
-                resource_id = azurerm_postgresql_server.pg[server].id
-                subresource_names = ["postgresqlServer"]
-            }],
-            [ for server in keys(var.redis_enterprise_config) : {
-                private_zone = "privatelink.redisenterprise.cache.azure.net"
-                name = "redis-${server}"
-                resource_id = azurerm_redis_enterprise_cluster.redis_enterprise[server].id
-                subresource_names = ["redisEnterprise"]
-            }],
-            # [  # Dont need KeyVault endpoints atm, example of non-dynamic endpoint entry
-            #     {
-            #         private_zone = "privatelink.vaultcore.azure.net"
-            #         name = "kv-infra"
-            #         resource_id = azurerm_key_vault.infra.id,
-            #         subresource_names = ["vault"]
-            #     },
-            #     {
-            #         private_zone = "privatelink.vaultcore.azure.net"
-            #         name = "kv-common"
-            #         resource_id = azurerm_key_vault.common.id,
-            #         subresource_names = ["vault"]
-            #     }
-            # ]
-        ])
+        [for server in keys(var.postgres_config) : {
+            private_zone = "privatelink.postgres.database.azure.com"
+            name = "pg-${server}"
+            resource_id = azurerm_postgresql_server.pg[server].id
+            subresource_names = ["postgresqlServer"]
+        }],
+        [for server in keys(var.redis_enterprise_config) : {
+            private_zone = "privatelink.redisenterprise.cache.azure.net"
+            name = "redis-${server}"
+            resource_id = azurerm_redis_enterprise_cluster.redis_enterprise[server].id
+            subresource_names = ["redisEnterprise"]
+        }],
+        # [  # Dont need KeyVault endpoints atm, example of non-dynamic endpoint entry
+        #     {
+        #         private_zone = "privatelink.vaultcore.azure.net"
+        #         name = "kv-infra"
+        #         resource_id = azurerm_key_vault.infra.id,
+        #         subresource_names = ["vault"]
+        #     },
+        #     {
+        #         private_zone = "privatelink.vaultcore.azure.net"
+        #         name = "kv-common"
+        #         resource_id = azurerm_key_vault.common.id,
+        #         subresource_names = ["vault"]
+        #     }
+        # ]
+    ])
 }
 
 # private endpoints

@@ -1,3 +1,17 @@
+locals {
+    redis_iam_collection = flatten([for redis_id, redis_data in var.redis_config : [
+        for role_id, role_data in var.redis_iam : {
+            key = "${redis_id}-${role_id}"
+            redis_id = azurerm_redis_cache.redis[redis_id].name
+            object_id = role_data.object_id
+            role = role_data.role
+        }
+        ]
+    ])
+    redis_iam_foreach = { for pg_item in local.pg_iam_collection : pg_item.key => pg_item }
+}
+
+
 resource "azurerm_redis_cache" "redis" {
     for_each = var.redis_config
 
@@ -18,6 +32,14 @@ resource "azurerm_redis_cache" "redis" {
         day_of_week = var.redis_patch_schedule.day_of_week
         start_hour_utc = var.redis_patch_schedule.start_hour_utc
     }
+}
+
+resource "azurerm_role_assignment" "redis_iam" {
+    for_each = local.redis_iam_foreach
+
+    scope = each.value.redis_id
+    role_definition_name = each.value.role
+    principal_id = each.value.object_id
 }
 
 resource "azurerm_key_vault_secret" "redis_individual_pass" {
