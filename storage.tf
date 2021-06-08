@@ -1,3 +1,14 @@
+locals {
+    storage_iam_foreach = {
+        for role_id, role_data in var.storage_iam : "${role_data.storage_id}-${role_id}" => {
+            storage_id = azurerm_storage_account.storage[role_data.storage_id].id
+            object_id = role_data.object_id
+            role = role_data.role
+        }
+    }
+}
+
+
 resource "azurerm_storage_account" "storage" {
     for_each = var.storage_config
 
@@ -11,6 +22,14 @@ resource "azurerm_storage_account" "storage" {
     min_tls_version = "TLS1_2"
 
     allow_blob_public_access = true
+}
+
+resource "azurerm_role_assignment" "storage_iam" {
+    for_each = local.storage_iam_foreach
+
+    scope = each.value.storage_id
+    role_definition_name = each.value.role
+    principal_id = each.value.object_id
 }
 
 resource "azurerm_storage_management_policy" "storage" {

@@ -3,8 +3,8 @@
 
 locals {
     admin_map = merge(var.keyvault_users, local.kv_admin_ids)
-    admin_list = [ for name, id in local.admin_map : { name = name, id = id} ]  # Convert to list
-    msi_list = [for name, data in var.managed_identities : {name = name, id = azurerm_user_assigned_identity.app[name].principal_id, access=data.kv_access}]
+    admin_list = [for name, id in local.admin_map : { name = name, id = id }]  # Convert to list
+    msi_list = [for name, data in var.managed_identities : { name = name, id = azurerm_user_assigned_identity.app[name].principal_id, access = data.kv_access }]
     ro_list = ["get", "list"]
     rw_list = ["get", "list", "set", "delete"]
     adminaccess_list = ["backup", "delete", "get", "list", "purge", "recover", "restore", "set"]
@@ -16,27 +16,27 @@ locals {
     # setproduct basically does a nested for loop, so for every item of the first list, it outputs a tuple of that item, and each item of the 2nd list
     # e.g setproduct([a,b], [c,d,e]) => [ [a,c], [a,d], [a,e], [b,c], [b,d], [b,e] ]
 
-    dynamic_admins = { for pair in setproduct(var.additional_keyvaults, local.admin_list) : "${pair[0]}.${pair[1].name}" => { 
-            kv_name = pair[0]
-            kv_id = azurerm_key_vault.add_kv[pair[0]].id
-            name = pair[1].name
-            id = pair[1].id
-            access = local.adminaccess_list
+    dynamic_admins = { for pair in setproduct(var.additional_keyvaults, local.admin_list) : "${pair[0]}.${pair[1].name}" => {
+        kv_name = pair[0]
+        kv_id = azurerm_key_vault.add_kv[pair[0]].id
+        name = pair[1].name
+        id = pair[1].id
+        access = local.adminaccess_list
         }
     }
 
     dynamic_msi = { for pair in setproduct(var.additional_keyvaults, local.msi_list) : "${pair[0]}.${pair[1].name}" => {
-            kv_name = pair[0]
-            kv_id = azurerm_key_vault.add_kv[pair[0]].id
-            name = pair[1].name
-            id = pair[1].id
-            access = pair[1].access == "ro" ? local.ro_list : local.rw_list
+        kv_name = pair[0]
+        kv_id = azurerm_key_vault.add_kv[pair[0]].id
+        name = pair[1].name
+        id = pair[1].id
+        access = pair[1].access == "ro" ? local.ro_list : local.rw_list
         }
     }
     normal_msi = { for data in local.msi_list : data.name => {
-            name = data.name
-            id = data.id
-            access = data.access == "ro" ? local.ro_list : local.rw_list
+        name = data.name
+        id = data.id
+        access = data.access == "ro" ? local.ro_list : local.rw_list
         }
     }
 }

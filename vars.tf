@@ -4,7 +4,24 @@ variable tags { type = map }
 variable eventhub_authid { type = string }
 
 variable resource_group_iam {
-    type = map
+    type = map(object({ object_id = string, role = string }))
+    default = {}
+}
+
+variable keyvault_iam {
+    type = map(object({ object_id = string, role = string }))
+    default = {}
+}
+variable postgres_iam {
+    type = map(object({ object_id = string, role = string }))
+    default = {}
+}
+variable redis_iam {
+    type = map(object({ object_id = string, role = string }))
+    default = {}
+}
+variable storage_iam {
+    type = map(object({ object_id = string, role = string, storage_id = string }))
     default = {}
 }
 
@@ -24,7 +41,7 @@ variable additional_keyvaults {
 }
 
 variable managed_identities {
-    type = map(object({ kv_access = string}))
+    type = map(object({ kv_access = string }))
     default = {}
 }
 

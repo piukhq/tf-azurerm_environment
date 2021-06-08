@@ -1,3 +1,17 @@
+locals {
+    pg_iam_collection = flatten([for pg_id, pg_data in var.postgres_config : [
+        for role_id, role_data in var.postgres_iam : {
+            key = "${pg_id}-${role_id}"
+            postgres_id = azurerm_postgresql_server.pg[pg_id].name
+            object_id = role_data.object_id
+            role = role_data.role
+        }
+        ]
+    ])
+    pg_iam_foreach = { for pg_item in local.pg_iam_collection : pg_item.key => pg_item }
+}
+
+
 resource "random_password" "pg" {
     for_each = var.postgres_config
 
@@ -27,6 +41,14 @@ resource "azurerm_postgresql_server" "pg" {
     public_network_access_enabled = lookup(each.value, "public_access", false)
     ssl_enforcement_enabled = lookup(each.value, "ssl_enforcement_enabled", true)
     ssl_minimal_tls_version_enforced = lookup(each.value, "ssl_minimal_tls_version_enforced", "TLS1_2")
+}
+
+resource "azurerm_role_assignment" "postgres_iam" {
+    for_each = local.pg_iam_foreach
+
+    scope = each.value.postgres_id
+    role_definition_name = each.value.role
+    principal_id = each.value.object_id
 }
 
 resource "azurerm_postgresql_configuration" "log_disconnections" {
@@ -85,7 +107,7 @@ resource "azurerm_monitor_diagnostic_setting" "pg" {
 
 locals {
     # filter map to only contain those who have public access enabled
-    postgres_public_servers = { for name, data in var.postgres_config: name => data if data.public_access }
+    postgres_public_servers = { for name, data in var.postgres_config : name => data if data.public_access }
 }
 
 resource "azurerm_postgresql_firewall_rule" "azure" {
