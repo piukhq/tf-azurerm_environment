@@ -39,6 +39,17 @@ locals {
         access = data.access == "ro" ? local.ro_list : local.rw_list
         }
     }
+
+
+    dynamic_iam = flatten([ for keyvault_id in var.additional_keyvaults : [
+        for iam_id, iam_data in var.keyvault_iam : {
+            key = "${keyvault_id}_${iam_id}"
+            kv_id = azurerm_key_vault.add_kv[keyvault_id].id
+            role = iam_data.role
+            object_id = iam_data.object_id
+        }
+    ]])
+    dynamic_iam_foreach = { for item in local.dynamic_iam : item.key => item }
 }
 
 resource "azurerm_key_vault" "add_kv" {
@@ -53,6 +64,15 @@ resource "azurerm_key_vault" "add_kv" {
     enabled_for_disk_encryption = false
     tenant_id = data.azurerm_client_config.current.tenant_id
     purge_protection_enabled = false
+}
+
+
+resource "azurerm_role_assignment" "add_keyvault_iam" {
+    for_each = local.dynamic_iam_foreach
+
+    scope = each.value.kv_id
+    role_definition_name = each.value.role
+    principal_id = each.value.object_id
 }
 
 resource "azurerm_monitor_diagnostic_setting" "add_kv" {
