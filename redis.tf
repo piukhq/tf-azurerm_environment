@@ -2,13 +2,13 @@ locals {
     redis_iam_collection = flatten([for redis_id, redis_data in var.redis_config : [
         for role_id, role_data in var.redis_iam : {
             key = "${redis_id}-${role_id}"
-            redis_id = azurerm_redis_cache.redis[redis_id].name
+            redis_id = azurerm_redis_cache.redis[redis_id].id
             object_id = role_data.object_id
             role = role_data.role
         }
         ]
     ])
-    redis_iam_foreach = { for pg_item in local.pg_iam_collection : pg_item.key => pg_item }
+    redis_iam_foreach = { for redis_item in local.redis_iam_collection : redis_item.key => redis_item }
 }
 
 

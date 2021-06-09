@@ -2,7 +2,7 @@ locals {
     pg_iam_collection = flatten([for pg_id, pg_data in var.postgres_config : [
         for role_id, role_data in var.postgres_iam : {
             key = "${pg_id}-${role_id}"
-            postgres_id = azurerm_postgresql_server.pg[pg_id].name
+            postgres_id = azurerm_postgresql_server.pg[pg_id].id
             object_id = role_data.object_id
             role = role_data.role
         }
