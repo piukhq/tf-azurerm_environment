@@ -9,7 +9,7 @@ resource "azurerm_redis_enterprise_cluster" "redis_enterprise" {
     sku_name = "Enterprise_E10-2"
 
     zones = ["1", "2", "3"]
-    tags = var.tags
+    # tags = var.tags ## Commented out until https://github.com/hashicorp/terraform-provider-azurerm/issues/13076 is fixed
 }
 
 resource "azurerm_redis_enterprise_database" "redis_enterprise_db" {
