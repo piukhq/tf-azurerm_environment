@@ -17,6 +17,21 @@ output "storage_accounts" {
     value = { for account in azurerm_storage_account.storage : account.name => account.primary_blob_connection_string }
 }
 
+output "peering" {
+    value = {
+        vnet_id = azurerm_virtual_network.vnet.id
+        vnet_name = azurerm_virtual_network.vnet.name
+        resource_group_name = azurerm_resource_group.rg.name
+    }
+}
+
+output "postgres_flexible_server_dns_link" {
+    value = {
+        name = azurerm_private_dns_zone.pgfs.name
+        resource_group_name = azurerm_resource_group.rg.name
+    }
+}
+
 output "private_links" {
     value = flatten([
         [for server in keys(var.postgres_config) : {

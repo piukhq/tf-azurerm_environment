@@ -3,6 +3,8 @@ variable location { type = string }
 variable tags { type = map }
 variable eventhub_authid { type = string }
 
+variable "vnet_cidr" { type = string }
+
 variable resource_group_iam {
     type = map(object({ object_id = string, role = string }))
     default = {}
@@ -67,6 +69,17 @@ variable postgres_config {
         sku_name = string
         storage_gb = number
         public_access = bool
+    }))
+    default = {}
+}
+
+variable postgres_flexible_config {
+    type = map(object({
+        name = string
+        version = string
+        sku_name = string
+        storage_mb = number
+        databases = list(string)
     }))
     default = {}
 }
