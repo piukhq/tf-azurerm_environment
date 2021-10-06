@@ -74,15 +74,13 @@ resource "azurerm_role_assignment" "pgfs" {
 }
 
 resource "azurerm_key_vault_secret" "pgfs" {
-    for_each = var.postgres_flexible_config
-
-    name = "infra-pgfs-${each.key}"
+    name = "infra-pgfs"
     value = jsonencode(local.connection_strings)
     content_type = "application/json"
     key_vault_id = azurerm_key_vault.infra.id
 
     tags = {
-        k8s_secret_name = "azure-pgfs-${each.key}"
+        k8s_secret_name = "azure-pgfs"
         k8s_namespaces = var.secret_namespaces
     }
 }
