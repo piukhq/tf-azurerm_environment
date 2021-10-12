@@ -80,6 +80,7 @@ variable postgres_flexible_config {
         sku_name = string
         storage_mb = number
         databases = list(string)
+        high_availability = bool
     }))
     default = {}
 }

@@ -57,6 +57,13 @@ resource "azurerm_postgresql_flexible_server" "pgfs" {
 
     storage_mb = each.value.storage_mb
 
+    dynamic "high_availability" {
+        for_each = each.value.high_availability ? [1] : []
+        content {
+            mode = "ZoneRedundant"
+        }
+    }
+
     sku_name   = each.value.sku_name
     depends_on = [azurerm_private_dns_zone_virtual_network_link.pgfs]
 }
