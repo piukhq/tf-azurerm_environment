@@ -115,12 +115,12 @@ variable redis_patch_schedule {
 }
 
 variable storage_config {
-    type = map(list(object({
+    type = map(object({
         name = string
         blob_endpoint = string
         account_replication_type = string
         account_tier = string
-    })))
+    }))
     default = {}
 }
 
