@@ -64,6 +64,7 @@ resource "azurerm_key_vault_secret" "storage_individual_pass" {
         "account" : each.value["name"],
         "key" : azurerm_storage_account.storage[each.key].primary_access_key,
         "connection_string" : azurerm_storage_account.storage[each.key].primary_connection_string,
+        "connection_string_with_blob_endpoint": "${azurerm_storage_account.storage[each.key].primary_connection_string}-${each.value["blob_endpoint"]}",
         "blob_connection_string" : azurerm_storage_account.storage[each.key].primary_blob_connection_string
     })
     content_type = "application/json"
