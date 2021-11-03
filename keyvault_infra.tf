@@ -26,6 +26,15 @@ resource "azurerm_monitor_diagnostic_setting" "infra_keyvault" {
         }
     }
 
+    log {
+        category = "AzurePolicyEvaluationDetails"
+        enabled  = false
+        retention_policy {
+            days    = 0
+            enabled = false
+        }
+    }
+
     metric {
         category = "AllMetrics"
         enabled = false
