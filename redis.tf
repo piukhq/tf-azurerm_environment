@@ -20,11 +20,16 @@ resource "azurerm_redis_cache" "redis" {
     resource_group_name = azurerm_resource_group.rg.name
     tags = var.tags
 
+    redis_version = lookup(each.value, "redis_version", 6)
+
     capacity = lookup(each.value, "capacity", 1)
-    family = lookup(each.value, "family", "C")
-    sku_name = lookup(each.value, "sku_name", "Standard")
+    family = lookup(each.value, "family", "P")
+    sku_name = lookup(each.value, "sku_name", "Premium")
     enable_non_ssl_port = lookup(each.value, "enable_non_ssl_port", true)
     minimum_tls_version = lookup(each.value, "minimum_tls_version", "1.2")
+
+    public_network_access_enabled = lookup(each.value, "public_network_access_enabled", false)
+    subnet_id = lookup(each.value, "subnet_id", azurerm_subnet.redis.id)
 
     redis_configuration {}
 
@@ -92,4 +97,14 @@ resource "azurerm_redis_firewall_rule" "wireguard" {
     resource_group_name = azurerm_resource_group.rg.name
     start_ip = "20.49.163.188"
     end_ip = "20.49.163.188"
+}
+
+resource "azurerm_redis_firewall_rule" "rfc1918_10" {
+    for_each = var.redis_config
+
+    name = "rfc1918_10"
+    redis_cache_name = azurerm_redis_cache.redis[each.key].name
+    resource_group_name = azurerm_resource_group.rg.name
+    start_ip = "10.0.0.0"
+    end_ip = "10.255.255.255"
 }
