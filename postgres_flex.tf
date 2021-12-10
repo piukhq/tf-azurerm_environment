@@ -5,6 +5,13 @@ locals {
     ], [
         for k, v in var.postgres_flexible_config:
             { for db in v.databases: "${k}_${db}_async" => "postgresql+asyncpg://${random_pet.pgfs[k].id}:${random_password.pgfs[k].result}@${azurerm_postgresql_flexible_server.pgfs[k].fqdn}/${db}?ssl=require" }
+    ], [
+        for k, v in var.postgres_flexible_config:
+            {
+                "${k}_username" = "${random_pet.pgfs[k].id}",
+                "${k}_password" = "${random_password.pgfs[k].result}",
+                "${k}_host" = "${azurerm_postgresql_flexible_server.pgfs[k].fqdn}",
+            }
     ]])...)
     pgfs_iam_collection = flatten([for pg_id, pg_data in var.postgres_flexible_config : [
         for role_id, role_data in var.postgres_iam : {
