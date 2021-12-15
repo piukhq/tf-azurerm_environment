@@ -111,3 +111,14 @@ resource "azurerm_key_vault_access_policy" "infra_sync" {
         "list"
     ]
 }
+
+resource "azurerm_key_vault_access_policy" "infra_apps" {
+    for_each = local.normal_msi
+
+    key_vault_id = azurerm_key_vault.infra.id
+
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = each.value.id
+
+    secret_permissions = each.value.access
+}
