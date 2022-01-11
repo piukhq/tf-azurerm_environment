@@ -29,3 +29,9 @@ resource "azurerm_role_assignment" "datamanagement" {
     role_definition_name = "Contributor"
     principal_id = "13876e0a-d625-42ff-89aa-3f6904b2f073"
 }
+
+resource "azurerm_role_assignment" "architecture" {
+    scope = azurerm_log_analytics_workspace.i.id
+    role_definition_name = "Contributor"
+    principal_id = "fb26c586-72a5-4fbc-b2b0-e1c28ef4fce1"
+}
