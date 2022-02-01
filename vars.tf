@@ -140,6 +140,10 @@ variable additional_managed_identities {
     default = {}
 }
 
-variable "cert_manager_zone_id" {
+variable "bink_sh_zone_id" {
+    type = string
+}
+
+variable "bink_host_zone_id" {
     type = string
 }
