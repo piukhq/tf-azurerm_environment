@@ -68,7 +68,25 @@ resource "azurerm_monitor_diagnostic_setting" "pg" {
     log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
 
     log {
-        category = "allLogs"
+        category = "PostgreSQLLogs"
+        enabled = true
+        retention_policy {
+            days    = 0
+            enabled = false
+        }
+    }
+
+    log {
+        category = "QueryStoreRuntimeStatistics"
+        enabled = true
+        retention_policy {
+            days    = 0
+            enabled = false
+        }
+    }
+
+    log {
+        category = "QueryStoreWaitStatistics"
         enabled = true
         retention_policy {
             days    = 0
