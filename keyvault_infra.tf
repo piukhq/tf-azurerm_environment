@@ -12,36 +12,24 @@ resource "azurerm_key_vault" "infra" {
 }
 
 resource "azurerm_monitor_diagnostic_setting" "infra_keyvault" {
-    name = "logs"
+    name = "diags"
     target_resource_id = azurerm_key_vault.infra.id
     eventhub_name = "azurekeyvault"
     eventhub_authorization_rule_id = var.eventhub_authid
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
 
     log {
         category = "AuditEvent"
-        enabled = true
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
 
     log {
         category = "AzurePolicyEvaluationDetails"
         enabled  = false
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
     }
 
     metric {
         category = "AllMetrics"
         enabled = false
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
 }
 

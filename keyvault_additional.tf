@@ -78,36 +78,24 @@ resource "azurerm_role_assignment" "add_keyvault_iam" {
 resource "azurerm_monitor_diagnostic_setting" "add_kv" {
     for_each = toset(var.additional_keyvaults)
 
-    name = "logs"
+    name = "diags"
     target_resource_id = azurerm_key_vault.add_kv[each.key].id
     eventhub_name = "azurekeyvault"
     eventhub_authorization_rule_id = var.eventhub_authid
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
 
     log {
         category = "AuditEvent"
-        enabled = true
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
 
     log {
         category = "AzurePolicyEvaluationDetails"
         enabled  = false
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
     }
 
     metric {
         category = "AllMetrics"
         enabled = false
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
 }
 

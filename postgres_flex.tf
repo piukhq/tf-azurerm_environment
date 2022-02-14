@@ -4,9 +4,6 @@ locals {
             { for db in v.databases: "${k}_${db}" => "postgresql://${random_pet.pgfs[k].id}:${random_password.pgfs[k].result}@${azurerm_postgresql_flexible_server.pgfs[k].fqdn}/${db}?sslmode=require" }
     ], [
         for k, v in var.postgres_flexible_config:
-            { for db in v.databases: "${k}_${db}_async" => "postgresql+asyncpg://${random_pet.pgfs[k].id}:${random_password.pgfs[k].result}@${azurerm_postgresql_flexible_server.pgfs[k].fqdn}/${db}?ssl=require" }
-    ], [
-        for k, v in var.postgres_flexible_config:
             {
                 "${k}_username" = "${random_pet.pgfs[k].id}",
                 "${k}_password" = "${random_password.pgfs[k].result}",
@@ -75,6 +72,21 @@ resource "azurerm_postgresql_flexible_server" "pgfs" {
     depends_on = [azurerm_private_dns_zone_virtual_network_link.pgfs]
     lifecycle {
         ignore_changes = [zone, high_availability.0.standby_availability_zone]
+    }
+}
+
+resource "azurerm_monitor_diagnostic_setting" "pgfs" {
+    for_each = var.postgres_flexible_config
+    name = "diags"
+    target_resource_id = azurerm_postgresql_flexible_server.pgfs[each.key].id
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
+
+    log {
+        category = "PostgreSQLLogs"
+    }
+
+    metric {
+        category = "AllMetrics"
     }
 }
 

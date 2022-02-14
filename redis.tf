@@ -39,6 +39,21 @@ resource "azurerm_redis_cache" "redis" {
     }
 }
 
+resource "azurerm_monitor_diagnostic_setting" "redis" {
+    for_each = var.redis_config
+    name = "diags"
+    target_resource_id = azurerm_redis_cache.redis[each.key].id
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
+
+    log {
+        category = "ConnectedClientList"
+    }
+
+    metric {
+        category = "AllMetrics"
+    }
+}
+
 resource "azurerm_role_assignment" "redis_iam" {
     for_each = local.redis_iam_foreach
 

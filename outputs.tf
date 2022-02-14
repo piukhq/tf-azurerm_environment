@@ -32,6 +32,10 @@ output "postgres_flexible_server_dns_link" {
     }
 }
 
+output "log_analytics_id" {
+    value = azurerm_log_analytics_workspace.i.id
+}
+
 output "private_links" {
     value = flatten([
         [for server in keys(var.postgres_config) : {

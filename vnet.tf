@@ -5,6 +5,20 @@ resource "azurerm_virtual_network" "vnet" {
     address_space = [var.vnet_cidr]
 }
 
+resource "azurerm_monitor_diagnostic_setting" "vnet" {
+    name = "diags"
+    target_resource_id = azurerm_virtual_network.vnet.id
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
+
+    log {
+        category = "VMProtectionAlerts"
+    }
+
+    metric {
+        category = "AllMetrics"
+    }
+}
+
 resource "azurerm_subnet" "postgres" {
     name = "postgres"
     resource_group_name = azurerm_resource_group.rg.name

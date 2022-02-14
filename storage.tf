@@ -79,51 +79,22 @@ resource "azurerm_key_vault_secret" "storage_individual_pass" {
 resource "azurerm_monitor_diagnostic_setting" "storage" {
     for_each = var.storage_config
 
-    name = "logs"
+    name = "diags"
     target_resource_id = "${azurerm_storage_account.storage[each.key].id}/blobServices/default"
     eventhub_name = "azurestorage"
     eventhub_authorization_rule_id = var.eventhub_authid
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
 
     log {
         category = "StorageRead"
-        enabled = true
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
     log {
         category = "StorageWrite"
-        enabled = true
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
     log {
         category = "StorageDelete"
-        enabled = true
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
-
-    metric {
-        category = "Capacity"
-        enabled = false
-        retention_policy {
-            days = 0
-            enabled = false
-        }
-    }
-
     metric {
         category = "Transaction"
-        enabled = false
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
 }

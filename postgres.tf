@@ -63,46 +63,17 @@ resource "azurerm_postgresql_configuration" "log_disconnections" {
 
 resource "azurerm_monitor_diagnostic_setting" "pg" {
     for_each = var.postgres_config
-
-    name = "logs"
+    name = "diags"
     target_resource_id = azurerm_postgresql_server.pg[each.key].id
-    eventhub_name = "azurepostgres"
-    eventhub_authorization_rule_id = var.eventhub_authid
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
 
     log {
-        category = "PostgreSQLLogs"
-        enabled = true
-        retention_policy {
-            days = 0
-            enabled = false
-        }
-    }
-    log {  # Disabled as it might send queries to redscam
-        category = "QueryStoreRuntimeStatistics"
-        enabled = false
-        retention_policy {
-            days = 0
-            enabled = false
-        }
-    }
-    log {  # Disabled as it might send queries to redscam
-        category = "QueryStoreWaitStatistics"
-        enabled = false
-        retention_policy {
-            days = 0
-            enabled = false
-        }
+        category = "allLogs"
     }
 
     metric {
         category = "AllMetrics"
-        enabled = false
-        retention_policy {
-            days = 0
-            enabled = false
-        }
     }
-
 }
 
 locals {
