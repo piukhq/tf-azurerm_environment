@@ -83,10 +83,20 @@ resource "azurerm_monitor_diagnostic_setting" "pgfs" {
 
     log {
         category = "PostgreSQLLogs"
+        enabled = true
+        retention_policy {
+            days    = 0
+            enabled = false
+        }
     }
 
     metric {
         category = "AllMetrics"
+        enabled = true
+        retention_policy {
+            days    = 0
+            enabled = false
+        }
     }
 }
 

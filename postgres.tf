@@ -69,10 +69,20 @@ resource "azurerm_monitor_diagnostic_setting" "pg" {
 
     log {
         category = "allLogs"
+        enabled = true
+        retention_policy {
+            days    = 0
+            enabled = false
+        }
     }
 
     metric {
         category = "AllMetrics"
+        enabled = true
+        retention_policy {
+            days    = 0
+            enabled = false
+        }
     }
 }
 
