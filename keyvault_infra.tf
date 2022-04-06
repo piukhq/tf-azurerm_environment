@@ -108,8 +108,8 @@ resource "azurerm_key_vault_access_policy" "infra_sync" {
     object_id = azurerm_user_assigned_identity.infra_sync.principal_id
 
     secret_permissions = [
-        "get",
-        "list"
+        "Get",
+        "List"
     ]
 }
 
