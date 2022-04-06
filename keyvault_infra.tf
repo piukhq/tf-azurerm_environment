@@ -72,14 +72,14 @@ resource "azurerm_key_vault_access_policy" "infra_devops" {
     object_id = "aac28b59-8ac3-4443-bccc-3fb820165a08"
 
     secret_permissions = [
-        "backup",
-        "delete",
-        "get",
-        "list",
-        "purge",
-        "recover",
-        "restore",
-        "set",
+        "Backup",
+        "Delete",
+        "Get",
+        "List",
+        "Purge",
+        "Recover",
+        "Restore",
+        "Set",
     ]
 }
 
