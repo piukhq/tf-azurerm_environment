@@ -83,7 +83,7 @@ resource "azurerm_monitor_diagnostic_setting" "storage" {
     target_resource_id = "${azurerm_storage_account.storage[each.key].id}/blobServices/default"
     eventhub_name = "azurestorage"
     eventhub_authorization_rule_id = var.eventhub_authid
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
+    log_analytics_workspace_id = var.loganalytics_id
 
     log {
         category = "StorageRead"

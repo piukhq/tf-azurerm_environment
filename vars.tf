@@ -3,6 +3,8 @@ variable location { type = string }
 variable tags { type = map }
 variable eventhub_authid { type = string }
 
+variable loganalytics_id { type = string }
+
 variable "vnet_cidr" { type = string }
 
 variable resource_group_iam {

@@ -43,7 +43,7 @@ resource "azurerm_monitor_diagnostic_setting" "redis" {
     for_each = var.redis_config
     name = "diags"
     target_resource_id = azurerm_redis_cache.redis[each.key].id
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
+    log_analytics_workspace_id = var.loganalytics_id
 
     log {
         category = "ConnectedClientList"

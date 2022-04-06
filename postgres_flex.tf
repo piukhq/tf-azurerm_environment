@@ -79,7 +79,7 @@ resource "azurerm_monitor_diagnostic_setting" "pgfs" {
     for_each = var.postgres_flexible_config
     name = "diags"
     target_resource_id = azurerm_postgresql_flexible_server.pgfs[each.key].id
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
+    log_analytics_workspace_id = var.loganalytics_id
 
     log {
         category = "PostgreSQLLogs"

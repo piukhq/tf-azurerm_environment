@@ -8,7 +8,7 @@ resource "azurerm_virtual_network" "vnet" {
 resource "azurerm_monitor_diagnostic_setting" "vnet" {
     name = "diags"
     target_resource_id = azurerm_virtual_network.vnet.id
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.i.id
+    log_analytics_workspace_id = var.loganalytics_id
 
     log {
         category = "VMProtectionAlerts"
