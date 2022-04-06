@@ -53,14 +53,14 @@ resource "azurerm_key_vault_access_policy" "infra_terraform" {
     object_id = "4869640a-3727-4496-a8eb-f7fae0872410"
 
     secret_permissions = [
-        "backup",
-        "delete",
-        "get",
-        "list",
-        "purge",
-        "recover",
-        "restore",
-        "set",
+        "Backup",
+        "Delete",
+        "Get",
+        "List",
+        "Purge",
+        "Recover",
+        "Restore",
+        "Set",
     ]
 }
 
