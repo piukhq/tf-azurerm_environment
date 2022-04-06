@@ -5,9 +5,9 @@ locals {
     admin_map = merge(var.keyvault_users, local.kv_admin_ids)
     admin_list = [for name, id in local.admin_map : { name = name, id = id }]  # Convert to list
     msi_list = [for name, data in var.managed_identities : { name = name, id = azurerm_user_assigned_identity.app[name].principal_id, access = data.kv_access }]
-    ro_list = ["get", "list"]
-    rw_list = ["get", "list", "set", "delete"]
-    adminaccess_list = ["backup", "delete", "get", "list", "purge", "recover", "restore", "set"]
+    ro_list = ["Get", "List"]
+    rw_list = ["Get", "List", "Set", "Delete"]
+    adminaccess_list = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
 
     # var.additional_keyvaults = ['keyvault1', 'keyvault2']
     # local.admin_list = [ {name = "jeff", id = "1234"}, {name = "bezos", id = "5678"}, ...]

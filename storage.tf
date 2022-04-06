@@ -21,7 +21,7 @@ resource "azurerm_storage_account" "storage" {
     account_replication_type = lookup(each.value, "account_replication_type", "ZRS")
     min_tls_version = "TLS1_2"
 
-    allow_blob_public_access = true
+    allow_nested_items_to_be_public = true
 }
 
 resource "azurerm_role_assignment" "storage_iam" {
