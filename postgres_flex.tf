@@ -8,6 +8,7 @@ locals {
                 "${k}_username" = "${random_pet.pgfs[k].id}",
                 "${k}_password" = "${random_password.pgfs[k].result}",
                 "${k}_host" = "${azurerm_postgresql_flexible_server.pgfs[k].fqdn}",
+                "${k}_placeholder" = "postgresql://${random_pet.pgfs[k].id}:${random_password.pgfs[k].result}@${azurerm_postgresql_flexible_server.pgfs[k].fqdn}/{}?sslmode=require",
             }
     ]])...)
     pgfs_iam_collection = flatten([for pg_id, pg_data in var.postgres_flexible_config : [
