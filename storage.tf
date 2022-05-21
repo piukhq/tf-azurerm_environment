@@ -17,6 +17,7 @@ resource "azurerm_storage_account" "storage" {
     location = azurerm_resource_group.rg.location
     tags = var.tags
 
+    cross_tenant_replication_enabled = false
     account_tier = lookup(each.value, "account_tier", "Standard")
     account_replication_type = lookup(each.value, "account_replication_type", "ZRS")
     min_tls_version = "TLS1_2"
