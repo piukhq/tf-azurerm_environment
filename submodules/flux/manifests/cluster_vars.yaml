@@ -1,0 +1,11 @@
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cluster-vars
+  namespace: flux-system
+data:
+  location: ${location}
+  cluster_name: ${cluster_name}
+  kube_api_host: ${kube_api_host}
+  loadbalancer_ip: ${loadbalancer_ip}

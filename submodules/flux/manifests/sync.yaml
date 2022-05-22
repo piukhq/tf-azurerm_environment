@@ -1,0 +1,37 @@
+apiVersion: v1
+data:
+  identity: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JRzJBZ0VBTUJBR0J5cUdTTTQ5QWdFR0JTdUJCQUFpQklHZU1JR2JBZ0VCQkRCemdNcDRlZzlKUVNEaXR0V08KNERWR3A4S21ZV1N0N2lrRFdoTzZmd3hKYytPakorZkZXQm1aZlBGQVRjTFZTZ1doWkFOaUFBU3hmR0MySUdGNgpTNlU5ZU9IeWVWVDk2MWJiajMyZ0dxLzNCcExRcnFnRm0zRTdWck9jSzhmSmNaVjNjckNxbElXbEM4UDQyVUU5CjZYcTZLdVlMdHFCQ0JyWW5sZ2xOS1g1T2pjbHJ2UU9DaWEyOU9NSnhQVkk0YTNVb0RUeVpZSEk9Ci0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0K
+  identity.pub: ZWNkc2Etc2hhMi1uaXN0cDM4NCBBQUFBRTJWalpITmhMWE5vWVRJdGJtbHpkSEF6T0RRQUFBQUlibWx6ZEhBek9EUUFBQUJoQkxGOFlMWWdZWHBMcFQxNDRmSjVWUDNyVnR1UGZhQWFyL2NHa3RDdXFBV2JjVHRXczV3cng4bHhsWGR5c0txVWhhVUx3L2paUVQzcGVyb3E1Z3Uyb0VJR3RpZVdDVTBwZms2TnlXdTlBNEtKcmIwNHduRTlVamhyZFNnTlBKbGdjZz09Cg==
+  known_hosts: Z2l0aHViLmNvbSBzc2gtcnNhIEFBQUFCM056YUMxeWMyRUFBQUFCSXdBQUFRRUFxMkE3aFJHbWRubTl0VURiTzlJRFN3Qks2VGJRYStQWFlQQ1B5NnJiVHJUdHc3UEhrY2NLcnBwMHlWaHA1SGRFSWNLcjZwTGxWREJmT0xYOVFVc3lDT1Ywd3pmaklKTmxHRVlzZGxMSml6SGhibjJtVWp2U0FIUXFaRVRZUDgxZUZ6TFFOblBIdDRFVlZVaDdWZkRFU1U4NEtlem1ENVFsV3BYTG12VTMxL3lNZitTZTh4aEhUdktTQ1pJRkltV3dvRzZtYlVvV2Y5bnpwSW9hU2pCK3dlcXFVVW1wYWFhc1hWYWw3MkorVVgyQisyUlBXM1JjVDBlT3pRZ3FsSkwzUktyVEp2ZHNqRTNKRUF2R3EzbEdIU1pYeTI4RzNza3VhMlNtVmkvdzR5Q0U2Z2JPRHFuVFdsZzcrd0M2MDR5ZEdYQThWSmlTNWFwNDNKWGlVRkZBYVE9PQpnaXRodWIuY29tIGVjZHNhLXNoYTItbmlzdHAyNTYgQUFBQUUyVmpaSE5oTFhOb1lUSXRibWx6ZEhBeU5UWUFBQUFJYm1semRIQXlOVFlBQUFCQkJFbUtTRU5qUUVlek9teGtaTXk3b3BLZ3dGQjlua3Q1WVJyWU1qTnVHNU44N3VSZ2c2Q0xyYm81d0FkVC95NnYwbUtWMFUydzBXWjJZQi8rK1Rwb2NrZz0KZ2l0aHViLmNvbSBzc2gtZWQyNTUxOSBBQUFBQzNOemFDMWxaREkxTlRFNUFBQUFJT01xcW5rVnpybTBTZEc2VU9vcUtMc2FiZ0g1Qzlva1dpMGRoMmw5R0tKbAo=
+kind: Secret
+metadata:
+  name: flux-system
+  namespace: flux-system
+type: Opaque
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: GitRepository
+metadata:
+  name: flux-system
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: master
+  secretRef:
+    name: flux-system
+  url: ssh://git@github.com/binkhq/gitops
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: flux-system
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./clusters/${flux_dir}
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  validation: client

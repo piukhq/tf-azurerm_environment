@@ -149,3 +149,52 @@ variable "bink_sh_zone_id" {
 variable "bink_host_zone_id" {
     type = string
 }
+
+variable aks {
+    type = map(object({
+        name = string
+        cidr = string
+        updates = string
+        sku = string
+        node_max_count = number
+        node_size = string
+        maintenance_day = string
+        iam = map(object({
+            object_id = string
+            role = string
+        }))
+        dns = object({
+            private = object({
+                name = string
+                resource_group = string
+            })
+            public = object({
+                name = string
+                resource_group = string
+            })
+        })
+        firewall = object({
+            rule_priority = number
+            ingress = object({
+                source_addr = string
+                public_ip = string
+                http_port = number
+                https_port = number
+            })
+            config = object({
+                resource_group = object({
+                    name = string
+                })
+                virtual_network = object({
+                    name = string
+                    id = string
+                })
+                firewall = object({
+                    name = string
+                    ip = string
+                })
+            })
+        })
+    }))
+    default = {}
+}
