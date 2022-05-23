@@ -33,6 +33,7 @@ variable "common" {
             })
         })
         registries = map(string)
+        loganalytics_id = string
     })
 }
 
@@ -235,7 +236,7 @@ resource "azurerm_kubernetes_cluster" "i" {
     node_resource_group = "${local.full_name}-nodes"
     dns_prefix = local.full_name
     sku_tier = var.cluster.sku
-    azure_policy_enabled = false
+    azure_policy_enabled = true
 
     default_node_pool {
         name = "default"
@@ -280,6 +281,14 @@ resource "azurerm_kubernetes_cluster" "i" {
         admin_group_object_ids = [ "aac28b59-8ac3-4443-bccc-3fb820165a08" ] # DevOps
     }
 
+    microsoft_defender {
+        log_analytics_workspace_id = var.common.loganalytics_id
+    }
+
+    oms_agent {
+        log_analytics_workspace_id = var.common.loganalytics_id
+    }
+
     maintenance_window {
         allowed {
             day = var.cluster.maintenance_day
@@ -297,6 +306,9 @@ resource "azurerm_role_assignment" "kubelet_node_vmss_contributor" {
     scope = data.azurerm_resource_group.node.id
     role_definition_name = "Virtual Machine Contributor"
     principal_id = azurerm_user_assigned_identity.kubelet.principal_id
+    lifecycle {
+        ignore_changes = [ scope ] # terraform incorrectly thinks this changes between runs
+    }
 }
 
 # Required for AAD Pod Identity
@@ -311,6 +323,9 @@ resource "azurerm_role_assignment" "kubelet_node_identity_operator_node_rg" {
     scope = data.azurerm_resource_group.node.id
     role_definition_name = "Managed Identity Operator"
     principal_id = azurerm_user_assigned_identity.kubelet.principal_id
+    lifecycle {
+        ignore_changes = [ scope ] # terraform incorrectly thinks this changes between runs
+    } 
 }
 
 resource "azurerm_role_assignment" "iam" {

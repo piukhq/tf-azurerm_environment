@@ -33,6 +33,7 @@ module "aks" {
             binkcore = "/subscriptions/0add5c8e-50a6-4821-be0f-7a47c879b009/resourceGroups/uksouth-core/providers/Microsoft.ContainerRegistry/registries/binkcore"
             binkext = "/subscriptions/0add5c8e-50a6-4821-be0f-7a47c879b009/resourceGroups/uksouth-core/providers/Microsoft.ContainerRegistry/registries/binkext"
         }
+        loganalytics_id = var.loganalytics_id
     }
 
     firewall = {
@@ -59,27 +60,3 @@ module "aks" {
 }
 
 output "aks_flux_config" { value = { for k, v in module.aks: k => v.flux_config }}
-
-# provider "kubectl" {
-#     for_each = var.aks
-
-#     host = module.aks[each.key].cluster.admin_config.host
-#     client_certificate = base64decode(module.aks[each.key].cluster.admin_config.client_certificate)
-#     client_key = base64decode(module.aks[each.key].cluster.admin_config.client_key)
-#     cluster_ca_certificate = base64decode(module.aks[each.key].cluster.admin_config.cluster_ca_certificate)
-# }
-
-
-# module "flux" {
-#     source = "./submodules/flux"
-#     config = var.aks
-#     # for_each = var.aks
-#     # common = {
-#     #     resource_group = {
-#     #         name = azurerm_resource_group.rg.name
-#     #     }
-#     # }
-#     # cluster = {
-#     #     name = each.value.name
-#     # }
-# }
