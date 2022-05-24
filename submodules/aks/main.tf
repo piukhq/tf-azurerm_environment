@@ -401,7 +401,7 @@ resource "azurerm_firewall_nat_rule_collection" "i" {
     }
     rule {
         name = "https"
-        source_addresses = [var.firewall.ingress.source_addr]
+        source_addresses = var.firewall.ingress.source_addr
         destination_ports = [var.firewall.ingress.https_port]
         destination_addresses = [var.firewall.ingress.public_ip]
         translated_address = cidrhost(var.cluster.cidr, 65534)
