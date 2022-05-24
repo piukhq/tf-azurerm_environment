@@ -41,7 +41,7 @@ variable "firewall" {
     type = object({
         rule_priority = number
         ingress = object({
-            source_addr = string
+            source_addr = list
             public_ip = string
             http_port = number
             https_port = number
@@ -392,7 +392,7 @@ resource "azurerm_firewall_nat_rule_collection" "i" {
 
     rule {
         name = "http"
-        source_addresses = [var.firewall.ingress.source_addr]
+        source_addresses = var.firewall.ingress.source_addr
         destination_ports = [var.firewall.ingress.http_port]
         destination_addresses = [var.firewall.ingress.public_ip]
         translated_address = cidrhost(var.cluster.cidr, 65534)
