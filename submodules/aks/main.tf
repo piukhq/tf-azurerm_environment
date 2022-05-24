@@ -328,7 +328,6 @@ resource "azurerm_role_assignment" "kubelet_node_identity_operator_node_rg" {
     } 
 }
 
-
 resource "azurerm_role_assignment" "rbac_users" {
     for_each = var.cluster.iam
 
