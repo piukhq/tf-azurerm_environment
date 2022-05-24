@@ -82,14 +82,6 @@ locals {
     full_name = "${var.common.resource_group.location}-${var.cluster.name}"
 }
 
-resource "azurerm_role_assignment" "rbac_users" {
-    for_each = var.cluster.iam
-
-    scope = var.common.resource_group.id
-    role_definition_name = "Azure Kubernetes Service Cluster User Role"
-    principal_id = each.value["object_id"]
-}
-
 resource "azurerm_virtual_network" "i" {
     name = local.full_name
     resource_group_name = var.common.resource_group.name
@@ -334,6 +326,15 @@ resource "azurerm_role_assignment" "kubelet_node_identity_operator_node_rg" {
     lifecycle {
         ignore_changes = [ scope ] # terraform incorrectly thinks this changes between runs
     } 
+}
+
+
+resource "azurerm_role_assignment" "rbac_users" {
+    for_each = var.cluster.iam
+
+    scope = azurerm_kubernetes_cluster.i.id
+    role_definition_name = "Azure Kubernetes Service Cluster User Role"
+    principal_id = each.value["object_id"]
 }
 
 resource "azurerm_role_assignment" "iam" {
