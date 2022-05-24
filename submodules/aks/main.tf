@@ -41,7 +41,7 @@ variable "firewall" {
     type = object({
         rule_priority = number
         ingress = object({
-            source_addr = list
+            source_addr = list(string)
             public_ip = string
             http_port = number
             https_port = number
