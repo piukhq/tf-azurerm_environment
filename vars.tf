@@ -53,6 +53,7 @@ variable managed_identities_loganalytics {
     type = map(object({
         role = string
     }))
+    default = {}
 }
 
 variable eventhubs {
