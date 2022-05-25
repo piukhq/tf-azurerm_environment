@@ -49,6 +49,11 @@ variable managed_identities {
     default = {}
 }
 
+variable managed_identities_loganalytics {
+    type = map(object({
+        role = string
+    }))
+}
 
 variable eventhubs {
     type = map(object({
@@ -132,13 +137,6 @@ variable storage_management_policy_config {
         prefix_match = list(string)
         delete_after_days = number
     })))
-    default = {}
-}
-
-variable additional_managed_identities {
-    type = map(object({
-        keyvault_permissions = list(string)
-    }))
     default = {}
 }
 

@@ -21,3 +21,19 @@ resource "azurerm_user_assigned_identity" "app" {
 
     name = "bink-${azurerm_resource_group.rg.name}-${each.key}"
 }
+
+resource "azurerm_user_assigned_identity" "loganalytics" {
+    for_each = var.managed_identities_loganalytics
+
+    resource_group_name = azurerm_resource_group.rg.name
+    location = azurerm_resource_group.rg.location
+
+    name = "bink-${azurerm_resource_group.rg.name}-${each.key}"
+}
+
+resource "azurerm_role_assignment" "loganalytics" {
+    for_each = var.managed_identities_loganalytics
+    scope = var.loganalytics_id
+    role_definition_name = each.value.role
+    principal_id = azurerm_user_assigned_identity.loganalytics[each.key].principal_id
+}
