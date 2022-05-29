@@ -166,6 +166,16 @@ resource "azurerm_private_dns_zone_virtual_network_link" "private" {
     registration_enabled = true
 }
 
+resource "azurerm_private_dns_a_record" "private_wildcard" {
+    provider = azurerm.core
+
+    name = "*.${var.cluster.name}"
+    zone_name = var.common.dns.private.name
+    resource_group_name = var.common.dns.private.resource_group
+    ttl = 3600
+    records = [cidrhost(var.cluster.cidr, 65534)]
+}
+
 resource "azurerm_dns_a_record" "wildcard" {
     provider = azurerm.core
 
