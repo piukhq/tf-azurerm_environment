@@ -27,6 +27,7 @@ module "aks" {
             public = {
                 name = each.value.dns.public.name
                 resource_group = each.value.dns.public.resource_group
+                regional_overrides = each.value.dns.public.regional_overrides
             }
         }
         registries = {

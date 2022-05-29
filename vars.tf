@@ -170,6 +170,7 @@ variable aks {
             public = object({
                 name = string
                 resource_group = string
+                regional_overrides = map(string)
             })
         })
         firewall = object({

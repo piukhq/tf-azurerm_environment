@@ -30,6 +30,7 @@ variable "common" {
             public = object({
                 name = string
                 resource_group = string
+                regional_overrides = map(string)
             })
         })
         registries = map(string)
@@ -201,6 +202,17 @@ resource "azurerm_dns_caa_record" "wildcard" {
         tag = "iodef"
         value = "mailto:devops@bink.com"
     }
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "public_regional_overrides" {
+    provider = azurerm.core
+    for_each = var.common.dns.public.regional_overrides
+
+    name = azurerm_virtual_network.i.name
+    private_dns_zone_name = each.value
+    resource_group_name = var.common.dns.public.resource_group
+    virtual_network_id = azurerm_virtual_network.i.id
+    registration_enabled = false
 }
 
 resource "azurerm_user_assigned_identity" "i" {
