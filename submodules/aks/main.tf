@@ -291,10 +291,6 @@ resource "azurerm_kubernetes_cluster" "i" {
         admin_group_object_ids = [ "aac28b59-8ac3-4443-bccc-3fb820165a08" ] # DevOps
     }
 
-    microsoft_defender {
-        log_analytics_workspace_id = var.common.loganalytics_id
-    }
-
     oms_agent {
         log_analytics_workspace_id = var.common.loganalytics_id
     }
