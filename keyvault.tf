@@ -24,8 +24,6 @@ resource "azurerm_role_assignment" "keyvault_iam" {
 resource "azurerm_monitor_diagnostic_setting" "common_keyvault" {
     name = "diags"
     target_resource_id = azurerm_key_vault.common.id
-    eventhub_name = "azurekeyvault"
-    eventhub_authorization_rule_id = var.eventhub_authid
     log_analytics_workspace_id = var.loganalytics_id
 
     log {
