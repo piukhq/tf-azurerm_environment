@@ -33,7 +33,6 @@ module "aks" {
             binkcore = "/subscriptions/0add5c8e-50a6-4821-be0f-7a47c879b009/resourceGroups/uksouth-core/providers/Microsoft.ContainerRegistry/registries/binkcore"
             binkext = "/subscriptions/0add5c8e-50a6-4821-be0f-7a47c879b009/resourceGroups/uksouth-core/providers/Microsoft.ContainerRegistry/registries/binkext"
         }
-        loganalytics_id = var.loganalytics_id
     }
 
     firewall = {

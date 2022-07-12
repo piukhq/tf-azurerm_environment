@@ -33,7 +33,6 @@ variable "common" {
             })
         })
         registries = map(string)
-        loganalytics_id = string
     })
 }
 
@@ -289,10 +288,6 @@ resource "azurerm_kubernetes_cluster" "i" {
         managed = true
         azure_rbac_enabled = true
         admin_group_object_ids = [ "aac28b59-8ac3-4443-bccc-3fb820165a08" ] # DevOps
-    }
-
-    oms_agent {
-        log_analytics_workspace_id = var.common.loganalytics_id
     }
 
     maintenance_window {
