@@ -36,9 +36,6 @@ locals {
 
 resource "kubectl_manifest" "namespace" {
     yaml_body = file("${path.module}/manifests/namespace.yaml")
-    lifecycle {
-        ignore_changes = [ yaml_incluster, uid ]
-    }
 }
 
 resource "kubectl_manifest" "cluster_vars" {
@@ -49,9 +46,6 @@ resource "kubectl_manifest" "cluster_vars" {
         loadbalancer_ip = var.flux_config.variables.loadbalancer_ip
         kube_api_host = var.flux_config.kube_admin_config.host
     })
-    lifecycle {
-        ignore_changes = [ yaml_incluster, uid ]
-    }
 }
 
 data "kubectl_file_documents" "deploy" {
@@ -64,7 +58,7 @@ resource "kubectl_manifest" "deploy" {
     yaml_body = each.value
     wait_for_rollout = false
     lifecycle {
-        ignore_changes = [ yaml_incluster, uid ]
+        ignore_changes = all
     }
 }
 
@@ -80,6 +74,6 @@ resource "kubectl_manifest" "sync" {
     yaml_body = each.value
     wait_for_rollout = false
     lifecycle {
-        ignore_changes = [ yaml_incluster, uid ]
+        ignore_changes = all
     }
 }
