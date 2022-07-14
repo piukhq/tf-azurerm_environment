@@ -76,31 +76,6 @@ resource "azurerm_postgresql_flexible_server" "pgfs" {
     }
 }
 
-resource "azurerm_monitor_diagnostic_setting" "pgfs" {
-    for_each = var.postgres_flexible_config
-    name = "diags"
-    target_resource_id = azurerm_postgresql_flexible_server.pgfs[each.key].id
-    log_analytics_workspace_id = var.loganalytics_id
-
-    log {
-        category = "PostgreSQLLogs"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-
-    metric {
-        category = "AllMetrics"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-}
-
 resource "azurerm_postgresql_flexible_server_configuration" "pgbouncer" {
     for_each = var.postgres_flexible_config
     name = "pgbouncer.enabled"
