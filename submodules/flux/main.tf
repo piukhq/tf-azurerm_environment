@@ -19,6 +19,7 @@ variable "flux_config" {
             cluster_name = string
             location = string
             loadbalancer_ip = string
+            prometheus_ip = string
         })
     })
 }
@@ -44,6 +45,7 @@ resource "kubectl_manifest" "cluster_vars" {
         location = var.flux_config.variables.location
         cluster_name = var.flux_config.variables.cluster_name
         loadbalancer_ip = var.flux_config.variables.loadbalancer_ip
+        prometheus_ip = var.flux_config.variables.prometheus_ip
         kube_api_host = var.flux_config.kube_admin_config.host
     })
 }

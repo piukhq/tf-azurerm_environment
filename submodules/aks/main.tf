@@ -418,6 +418,7 @@ output "flux_config" {
             cluster_name = var.cluster.name
             location = var.common.resource_group.location
             loadbalancer_ip = cidrhost(var.cluster.cidr, 65534)
+            prometheus_ip = cidrhost(var.cluster.cidr, 65533)
         }
     }
 }
