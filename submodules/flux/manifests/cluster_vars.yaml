@@ -9,4 +9,3 @@ data:
   cluster_name: ${cluster_name}
   kube_api_host: ${kube_api_host}
   loadbalancer_ip: ${loadbalancer_ip}
-  prometheus_ip: ${prometheus_ip}
