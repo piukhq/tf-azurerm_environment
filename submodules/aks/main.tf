@@ -185,33 +185,6 @@ resource "azurerm_dns_a_record" "wildcard" {
     records = [var.firewall.ingress.public_ip]
 }
 
-resource "azurerm_dns_caa_record" "wildcard" {
-    provider = azurerm.core
-
-    name = "*.${var.cluster.name}.${var.common.resource_group.location}"
-    zone_name = var.common.dns.public.name
-    resource_group_name = var.common.dns.public.resource_group
-    ttl = 3600
-
-    record {
-        flags = 0
-        tag = "issue"
-        value = "letsencrypt.org"
-    }
-
-    record {
-        flags = 0
-        tag = "issuewild"
-        value = ";"
-    }
-
-    record {
-        flags = 0
-        tag = "iodef"
-        value = "mailto:devops@bink.com"
-    }
-}
-
 resource "azurerm_user_assigned_identity" "i" {
     name = local.full_name
     resource_group_name = var.common.resource_group.name
