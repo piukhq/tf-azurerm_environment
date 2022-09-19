@@ -92,11 +92,6 @@ variable postgres_flexible_config {
     default = {}
 }
 
-variable secret_namespaces {
-    type = string
-    default = "default,monitoring"
-}
-
 variable redis_config {
     type = map
     default = {}

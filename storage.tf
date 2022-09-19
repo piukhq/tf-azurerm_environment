@@ -72,7 +72,6 @@ resource "azurerm_key_vault_secret" "storage_individual_pass" {
 
     tags = {
         k8s_secret_name = "azure-storage-${each.key}"
-        k8s_namespaces = var.secret_namespaces
     }
 }
 

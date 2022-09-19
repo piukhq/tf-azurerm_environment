@@ -99,6 +99,5 @@ resource "azurerm_key_vault_secret" "hub_auth" {
 
     tags = {
         k8s_secret_name = "azure-eventhub-${each.key}"
-        k8s_namespaces = var.secret_namespaces
     }
 }

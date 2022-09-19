@@ -149,7 +149,6 @@ resource "azurerm_key_vault_secret" "pg_individual_pass" {
 
     tags = {
         k8s_secret_name = "azure-pg-${each.key}"
-        k8s_namespaces = var.secret_namespaces
         # k8s_convert = "file:/app/templates/pgbouncer.yaml"
     }
 }
@@ -170,7 +169,6 @@ resource "azurerm_key_vault_secret" "pg_all_pass" {
 
     tags = {
         k8s_secret_name = "azure-pg-all"
-        k8s_namespaces = var.secret_namespaces
         k8s_convert = "file:/app/templates/pgbouncer.yaml"
     }
 }
