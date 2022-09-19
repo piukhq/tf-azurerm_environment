@@ -6,6 +6,7 @@ terraform {
             configuration_aliases = [ azurerm.core ]
         }
     }
+    experiments = [ module_variable_optional_attrs ]
 }
 
 variable "common" {
@@ -40,7 +41,8 @@ variable "firewall" {
     type = object({
         rule_priority = number
         ingress = object({
-            source_addr = list(string)
+            source_ip_groups = optional(list(string))
+            source_addr = optional(list(string))
             public_ip = string
             http_port = number
             https_port = number
@@ -366,6 +368,7 @@ resource "azurerm_firewall_nat_rule_collection" "i" {
 
     rule {
         name = "http"
+        source_ip_groups = var.firewall.ingress.source_ip_groups
         source_addresses = var.firewall.ingress.source_addr
         destination_ports = [var.firewall.ingress.http_port]
         destination_addresses = [var.firewall.ingress.public_ip]
@@ -375,6 +378,7 @@ resource "azurerm_firewall_nat_rule_collection" "i" {
     }
     rule {
         name = "https"
+        source_ip_groups = var.firewall.ingress.source_ip_groups
         source_addresses = var.firewall.ingress.source_addr
         destination_ports = [var.firewall.ingress.https_port]
         destination_addresses = [var.firewall.ingress.public_ip]

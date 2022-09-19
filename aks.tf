@@ -39,6 +39,7 @@ module "aks" {
         config = each.value.firewall.config
         rule_priority = each.value.firewall.rule_priority
         ingress = {
+            source_ip_groups = each.value.firewall.ingress.source_ip_groups
             source_addr = each.value.firewall.ingress.source_addr
             public_ip = each.value.firewall.ingress.public_ip
             http_port = each.value.firewall.ingress.http_port
