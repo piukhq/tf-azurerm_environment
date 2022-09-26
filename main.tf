@@ -6,7 +6,6 @@ terraform {
             configuration_aliases = [ azurerm.core ]
         }
     }
-    experiments = [ module_variable_optional_attrs ]
 }
 
 resource "azurerm_resource_group" "rg" {

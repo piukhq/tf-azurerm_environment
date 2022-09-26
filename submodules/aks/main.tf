@@ -6,7 +6,6 @@ terraform {
             configuration_aliases = [ azurerm.core ]
         }
     }
-    experiments = [ module_variable_optional_attrs ]
 }
 
 variable "common" {
