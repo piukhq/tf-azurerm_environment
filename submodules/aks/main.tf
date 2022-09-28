@@ -368,6 +368,15 @@ resource "azurerm_monitor_diagnostic_setting" "i" {
             enabled = true
         }
     }
+
+    metric {
+        category = "AllMetrics"
+        enabled = false
+        retention_policy {
+            days = 0
+            enabled = false
+        }
+    }
 }
 
 data azurerm_resource_group "node" {
