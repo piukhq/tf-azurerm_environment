@@ -19,6 +19,7 @@ variable "common" {
             vnet_name = string
             vnet_id = string
         })
+        loganalytics_id = string
         dns = object({
             postgres = object({
                 name = string
@@ -66,6 +67,7 @@ variable "cluster" {
     type = object({
         name = string
         cidr = string
+        api_ip_ranges = optional(list(string))
         updates = string
         sku = string
         node_max_count = number
@@ -220,6 +222,7 @@ resource "azurerm_kubernetes_cluster" "i" {
     dns_prefix = local.full_name
     sku_tier = var.cluster.sku
     azure_policy_enabled = true
+    api_server_authorized_ip_ranges = var.cluster.api_ip_ranges
 
     default_node_pool {
         name = "default"
@@ -268,6 +271,69 @@ resource "azurerm_kubernetes_cluster" "i" {
         allowed {
             day = var.cluster.maintenance_day
             hours = [0, 1, 2, 3, 4, 5, 6]
+        }
+    }
+}
+
+resource "azurerm_monitor_diagnostic_setting" "i" {
+    name = "loganalytics"
+    target_resource_id = azurerm_kubernetes_cluster.i.id
+    log_analytics_workspace_id = var.common.loganalytics_id
+
+    log {
+        category = "kube-apiserver"
+        enabled = true
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "kube-audit"
+        enabled = true
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "kube-audit-admin"
+        enabled = true
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "kube-controller-manager"
+        enabled = true
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "kube-scheduler"
+        enabled = true
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "cluster-autoscaler"
+        enabled = true
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "cloud-controller-manager"
+        enabled = true
+        retention_policy {
+            days = 90
+            enabled = true
         }
     }
 }

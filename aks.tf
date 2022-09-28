@@ -12,6 +12,7 @@ module "aks" {
             id = azurerm_resource_group.rg.id
             location = azurerm_resource_group.rg.location
         }
+        loganalytics_id = var.loganalytics_id
         peer = {
             vnet_id = azurerm_virtual_network.vnet.id
             vnet_name = azurerm_virtual_network.vnet.name
@@ -50,6 +51,7 @@ module "aks" {
     cluster = {
         name = each.value.name
         cidr = each.value.cidr
+        api_ip_ranges = each.value.api_ip_ranges
         updates = each.value.updates
         sku = each.value.sku
         node_max_count = each.value.node_max_count

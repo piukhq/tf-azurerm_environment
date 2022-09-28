@@ -147,6 +147,7 @@ variable aks {
     type = map(object({
         name = string
         cidr = string
+        api_ip_ranges = optional(list(string))
         updates = string
         sku = string
         node_max_count = number
