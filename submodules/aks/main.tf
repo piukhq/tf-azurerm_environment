@@ -290,7 +290,7 @@ resource "azurerm_monitor_diagnostic_setting" "i" {
     }
     log {
         category = "kube-audit"
-        enabled = true
+        enabled = false
         retention_policy {
             days = 90
             enabled = true
@@ -298,7 +298,7 @@ resource "azurerm_monitor_diagnostic_setting" "i" {
     }
     log {
         category = "kube-audit-admin"
-        enabled = true
+        enabled = false
         retention_policy {
             days = 90
             enabled = true
