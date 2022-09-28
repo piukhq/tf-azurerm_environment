@@ -336,6 +336,38 @@ resource "azurerm_monitor_diagnostic_setting" "i" {
             enabled = true
         }
     }
+    log {
+        category = "guard"
+        enabled = false
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "csi-azuredisk-controller"
+        enabled = false
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "csi-azurefile-controller"
+        enabled = false
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
+    log {
+        category = "csi-snapshot-controller"
+        enabled = false
+        retention_policy {
+            days = 90
+            enabled = true
+        }
+    }
 }
 
 data azurerm_resource_group "node" {
