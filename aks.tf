@@ -58,6 +58,8 @@ module "aks" {
         node_size = each.value.node_size
         maintenance_day = each.value.maintenance_day
         iam = each.value.iam
+        zones = each.value.zones
+        os_disk_type = each.value.os_disk_type
     }
 }
 

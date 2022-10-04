@@ -71,6 +71,8 @@ variable "cluster" {
         updates = string
         sku = string
         node_max_count = number
+        zones = optional(list(string), null)
+        os_disk_type = optional(string, "Managed")
         node_size = string
         maintenance_day = string
         iam = map(object({
@@ -230,6 +232,8 @@ resource "azurerm_kubernetes_cluster" "i" {
         max_count = var.cluster.node_max_count
         min_count = 3
         vm_size = var.cluster.node_size
+        zones = var.cluster.zones
+        os_disk_type = var.cluster.os_disk_type
         vnet_subnet_id = one(azurerm_virtual_network.i.subnet[*].id)
         max_pods = 100
     }
@@ -259,6 +263,11 @@ resource "azurerm_kubernetes_cluster" "i" {
         ssh_key {
             key_data = file("~/.ssh/id_bink_azure_terraform.pub")
         }
+    }
+
+    auto_scaler_profile {
+        balance_similar_node_groups = true
+        skip_nodes_with_local_storage = false
     }
 
     azure_active_directory_role_based_access_control {
