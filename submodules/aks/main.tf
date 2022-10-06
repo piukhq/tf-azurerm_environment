@@ -307,7 +307,7 @@ resource "azurerm_key_vault_secret" "flux_cluster_vars" {
     content_type = "application/json"
     value = jsonencode({
         "location": "${var.common.resource_group.location}"
-        "cluster_name": "${local.full_name}"
+        "cluster_name": "${var.cluster.name}"
         "kube_api_host": "${azurerm_kubernetes_cluster.i.kube_admin_config.0.host}"
         "loadbalancer_ip": "${cidrhost(var.cluster.cidr, 65534)}"
     })
