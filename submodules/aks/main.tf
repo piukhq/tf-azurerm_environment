@@ -287,19 +287,6 @@ resource "azurerm_kubernetes_cluster" "i" {
             hours = [0, 1, 2, 3, 4, 5, 6]
         }
     }
-
-    provisioner "local-exec" {
-        command = <<-EOF
-        az account set --subscription "${data.azurerm_subscription.i.subscription_id}"
-        export FLUX_DIR="${var.common.resource_group.location}-${trim(var.cluster.name, "0123456789")}"
-        kustomize build ${path.module}/flux | envsubst > /tmp/${var.cluster.name}.yaml
-        az aks command invoke \
-            --resource-group ${var.common.resource_group.name} \
-            --name ${var.cluster.name} \
-            --command "kubectl apply -f ${var.cluster.name}.yaml" \
-            --file /tmp/${var.cluster.name}.yaml
-        EOF
-    }
 }
 
 resource "azurerm_key_vault_secret" "flux_cluster_vars" {
@@ -536,6 +523,50 @@ resource "azurerm_firewall_nat_rule_collection" "i" {
         translated_port = "443"
         protocols = ["TCP"]
     }
+}
+
+resource "null_resource" "flux_install" {
+    provisioner "local-exec" {
+        command = <<-EOF
+        az account set --subscription "${data.azurerm_subscription.i.subscription_id}"
+        export FLUX_DIR="${var.common.resource_group.location}-${trim(var.cluster.name, "0123456789")}"
+        envsubst < ${path.module}/flux/gotk-sync.yaml > /tmp/${local.full_name}.yaml
+
+        until az aks command invoke \
+            --resource-group ${var.common.resource_group.name} \
+            --name ${local.full_name} \
+            --command "kubectl get namespaces -o name" | grep flux-system
+        do
+            echo "Attempting to install Flux"
+            az aks command invoke \
+                --resource-group ${var.common.resource_group.name} \
+                --name ${local.full_name} \
+                --command "kubectl apply -f gotk-components.yaml" \
+                --file ${path.module}/flux/gotk-components.yaml
+            sleep 10
+        done
+
+        until az aks command invoke \
+            --resource-group ${var.common.resource_group.name} \
+            --name ${local.full_name} \
+            --command "kubectl get gitrepository -n flux-system -o name" | grep flux-system
+        do
+            echo "Attempting to install Flux Sync"
+            az aks command invoke \
+                --resource-group ${var.common.resource_group.name} \
+                --name ${local.full_name} \
+                --command "kubectl apply -f ${local.full_name}.yaml" \
+                --file /tmp/${local.full_name}.yaml
+            sleep 10
+        done
+
+        EOF
+        interpreter = ["/bin/zsh", "-c"]
+    }
+    depends_on = [
+      azurerm_kubernetes_cluster.i,
+      azurerm_firewall_network_rule_collection.i,
+    ]
 }
 
 output "flux_config" {
