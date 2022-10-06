@@ -99,5 +99,6 @@ resource "azurerm_key_vault_secret" "pgfs" {
 
     tags = {
         k8s_secret_name = "azure-pgfs"
+        k8s_namespaces = "*"
     }
 }

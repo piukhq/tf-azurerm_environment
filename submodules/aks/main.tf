@@ -20,6 +20,9 @@ variable "common" {
             vnet_id = string
         })
         loganalytics_id = string
+        key_vault = object({
+            id = string
+        })
         dns = object({
             postgres = object({
                 name = string
@@ -85,6 +88,8 @@ variable "cluster" {
 locals {
     full_name = "${var.common.resource_group.location}-${var.cluster.name}"
 }
+
+data "azurerm_subscription" "i" {}
 
 resource "azurerm_virtual_network" "i" {
     name = local.full_name
@@ -281,6 +286,36 @@ resource "azurerm_kubernetes_cluster" "i" {
             day = var.cluster.maintenance_day
             hours = [0, 1, 2, 3, 4, 5, 6]
         }
+    }
+
+    provisioner "local-exec" {
+        command = <<-EOF
+        az account set --subscription "${data.azurerm_subscription.i.subscription_id}"
+        export FLUX_DIR="${var.common.resource_group.location}-${trim(var.cluster.name, "0123456789")}"
+        kustomize build ${path.module}/flux | envsubst > /tmp/${var.cluster.name}.yaml
+        az aks command invoke \
+            --resource-group ${var.common.resource_group.name} \
+            --name ${var.cluster.name} \
+            --command "kubectl apply -f ${var.cluster.name}.yaml" \
+            --file /tmp/${var.cluster.name}.yaml
+        EOF
+    }
+}
+
+resource "azurerm_key_vault_secret" "flux_cluster_vars" {
+    name = "${var.cluster.name}-flux-cluster-vars"
+    content_type = "application/json"
+    value = jsonencode({
+        "location": "${var.common.resource_group.location}"
+        "cluster_name": "${local.full_name}"
+        "kube_api_host": "${azurerm_kubernetes_cluster.i.kube_admin_config.0.host}"
+        "loadbalancer_ip": "${cidrhost(var.cluster.cidr, 65534)}"
+    })
+    key_vault_id = var.common.key_vault.id
+
+    tags = {
+        k8s_secret_name = "flux-cluster-vars"
+        k8s_namespace = "flux-system"
     }
 }
 
