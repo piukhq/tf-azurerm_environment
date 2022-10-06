@@ -528,17 +528,18 @@ resource "azurerm_firewall_nat_rule_collection" "i" {
 resource "null_resource" "flux_install" {
     provisioner "local-exec" {
         command = <<-EOF
-        az account set --subscription "${data.azurerm_subscription.i.subscription_id}"
         export FLUX_DIR="${var.common.resource_group.location}-${trim(var.cluster.name, "0123456789")}"
         envsubst < ${path.module}/flux/gotk-sync.yaml > /tmp/${local.full_name}.yaml
 
         until az aks command invoke \
+            --subscription "${data.azurerm_subscription.i.subscription_id}" \
             --resource-group ${var.common.resource_group.name} \
             --name ${local.full_name} \
             --command "kubectl get namespaces -o name" | grep flux-system
         do
             echo "Attempting to install Flux"
             az aks command invoke \
+                --subscription "${data.azurerm_subscription.i.subscription_id}" \
                 --resource-group ${var.common.resource_group.name} \
                 --name ${local.full_name} \
                 --command "kubectl apply -f gotk-components.yaml" \
@@ -547,12 +548,14 @@ resource "null_resource" "flux_install" {
         done
 
         until az aks command invoke \
+            --subscription "${data.azurerm_subscription.i.subscription_id}" \
             --resource-group ${var.common.resource_group.name} \
             --name ${local.full_name} \
             --command "kubectl get gitrepository -n flux-system -o name" | grep flux-system
         do
             echo "Attempting to install Flux Sync"
             az aks command invoke \
+                --subscription "${data.azurerm_subscription.i.subscription_id}" \
                 --resource-group ${var.common.resource_group.name} \
                 --name ${local.full_name} \
                 --command "kubectl apply -f ${local.full_name}.yaml" \
