@@ -20,9 +20,6 @@ variable "common" {
             vnet_id = string
         })
         loganalytics_id = string
-        key_vault = object({
-            id = string
-        })
         dns = object({
             postgres = object({
                 name = string
@@ -289,23 +286,6 @@ resource "azurerm_kubernetes_cluster" "i" {
     }
 }
 
-resource "azurerm_key_vault_secret" "flux_cluster_vars" {
-    name = "${var.cluster.name}-flux-cluster-vars"
-    content_type = "application/json"
-    value = jsonencode({
-        "location": "${var.common.resource_group.location}"
-        "cluster_name": "${var.cluster.name}"
-        "kube_api_host": "${azurerm_kubernetes_cluster.i.kube_admin_config.0.host}"
-        "loadbalancer_ip": "${cidrhost(var.cluster.cidr, 65534)}"
-    })
-    key_vault_id = var.common.key_vault.id
-
-    tags = {
-        k8s_secret_name = "flux-cluster-vars"
-        k8s_namespace = "flux-system"
-    }
-}
-
 resource "azurerm_monitor_diagnostic_setting" "i" {
     name = "loganalytics"
     target_resource_id = azurerm_kubernetes_cluster.i.id
@@ -529,6 +509,11 @@ resource "null_resource" "flux_install" {
     provisioner "local-exec" {
         command = <<-EOF
         export FLUX_DIR="${var.common.resource_group.location}-${trim(var.cluster.name, "0123456789")}"
+        export LOCATION="${var.common.resource_group.location}"
+        export CLUSTER_NAME="${var.cluster.name}"
+        export KUBE_API_HOST="${azurerm_kubernetes_cluster.i.kube_admin_config.0.host}"
+        export LOADBALANCER_IP="${cidrhost(var.cluster.cidr, 65534)}"
+
         envsubst < ${path.module}/flux/gotk-sync.yaml > /tmp/${local.full_name}.yaml
 
         until az aks command invoke \

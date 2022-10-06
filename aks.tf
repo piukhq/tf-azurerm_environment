@@ -13,9 +13,6 @@ module "aks" {
             location = azurerm_resource_group.rg.location
         }
         loganalytics_id = var.loganalytics_id
-        key_vault = {
-            id = azurerm_key_vault.infra.id
-        }
         peer = {
             vnet_id = azurerm_virtual_network.vnet.id
             vnet_name = azurerm_virtual_network.vnet.name

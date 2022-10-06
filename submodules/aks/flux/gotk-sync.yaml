@@ -35,3 +35,14 @@ spec:
     kind: GitRepository
     name: flux-system
   validation: client
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cluster-vars
+  namespace: flux-system
+data:
+  location: $LOCATION
+  cluster_name: $CLUSTER_NAME
+  kube_api_host: $KUBE_API_HOST
+  loadbalancer_ip: $LOADBALANCER_IP
