@@ -22,8 +22,9 @@ module "aks" {
                 name = azurerm_private_dns_zone.pgfs.name
             }
             private = {
-                name = each.value.dns.private.name
                 resource_group = each.value.dns.private.resource_group
+                primary_zone = each.value.dns.private.primary_zone
+                secondary_zones = each.value.dns.private.secondary_zones
             }
             public = {
                 name = each.value.dns.public.name

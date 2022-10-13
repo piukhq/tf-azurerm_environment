@@ -25,8 +25,9 @@ variable "common" {
                 name = string
             })
             private = object({
-                name = string
                 resource_group = string
+                primary_zone = string
+                secondary_zones = list(string)
             })
             public = object({
                 name = string
@@ -162,24 +163,22 @@ resource "azurerm_private_dns_zone_virtual_network_link" "pgfs" {
     resource_group_name = var.common.resource_group.name
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "private" {
+resource "azurerm_private_dns_zone_virtual_network_link" "primary" {
     provider = azurerm.core
-
     name = azurerm_virtual_network.i.name
-    private_dns_zone_name = var.common.dns.private.name
     resource_group_name = var.common.dns.private.resource_group
+    private_dns_zone_name = var.common.dns.private.primary_zone
     virtual_network_id = azurerm_virtual_network.i.id
     registration_enabled = true
 }
 
-resource "azurerm_private_dns_a_record" "private_wildcard" {
+resource "azurerm_private_dns_zone_virtual_network_link" "secondary" {
     provider = azurerm.core
-
-    name = "*.${var.cluster.name}"
-    zone_name = var.common.dns.private.name
+    for_each = toset(var.common.dns.private.secondary_zones)
+    name = azurerm_virtual_network.i.name
     resource_group_name = var.common.dns.private.resource_group
-    ttl = 3600
-    records = [cidrhost(var.cluster.cidr, 65534)]
+    private_dns_zone_name = each.key
+    virtual_network_id = azurerm_virtual_network.i.id
 }
 
 resource "azurerm_dns_a_record" "wildcard" {

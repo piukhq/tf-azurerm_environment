@@ -161,8 +161,9 @@ variable aks {
         }))
         dns = object({
             private = object({
-                name = string
                 resource_group = string
+                primary_zone = string
+                secondary_zones = list(string)
             })
             public = object({
                 name = string
