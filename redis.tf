@@ -25,7 +25,7 @@ resource "azurerm_redis_cache" "redis" {
     capacity = lookup(each.value, "capacity", 1)
     family = lookup(each.value, "family", "P")
     sku_name = lookup(each.value, "sku_name", "Premium")
-    enable_non_ssl_port = lookup(each.value, "enable_non_ssl_port", true)
+    enable_non_ssl_port = false
     minimum_tls_version = lookup(each.value, "minimum_tls_version", "1.2")
 
     public_network_access_enabled = lookup(each.value, "public_network_access_enabled", false)
