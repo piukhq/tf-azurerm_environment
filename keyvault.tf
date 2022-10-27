@@ -9,7 +9,7 @@ resource "azurerm_key_vault" "common" {
     sku_name = "standard"
     enabled_for_disk_encryption = false
     tenant_id = data.azurerm_client_config.current.tenant_id
-    purge_protection_enabled = false
+    purge_protection_enabled = true
 }
 
 resource "azurerm_role_assignment" "keyvault_iam" {

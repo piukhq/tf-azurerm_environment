@@ -8,7 +8,7 @@ resource "azurerm_key_vault" "infra" {
     # All don't need much accidental delete protection as TF populates this KV
     enabled_for_disk_encryption = false
     tenant_id = data.azurerm_client_config.current.tenant_id
-    purge_protection_enabled = false
+    purge_protection_enabled = true
 }
 
 resource "azurerm_monitor_diagnostic_setting" "infra_keyvault" {
