@@ -61,6 +61,7 @@ module "aks" {
         iam = each.value.iam
         zones = each.value.zones
         os_disk_type = each.value.os_disk_type
+        os_disk_size_gb = each.value.os_disk_size_gb
     }
 }
 
