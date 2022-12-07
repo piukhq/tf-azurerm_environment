@@ -74,7 +74,6 @@ variable "cluster" {
         node_max_count = number
         zones = optional(list(string), null)
         os_disk_type = optional(string, "Managed")
-        os_disk_size_gb = optional(string, "128")
         node_size = string
         maintenance_day = string
         iam = map(object({
