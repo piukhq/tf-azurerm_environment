@@ -155,7 +155,6 @@ variable aks {
         maintenance_day = string
         zones = optional(list(string))
         os_disk_type = optional(string)
-        os_disk_size_gb = optional(string)
         iam = map(object({
             object_id = string
             role = string

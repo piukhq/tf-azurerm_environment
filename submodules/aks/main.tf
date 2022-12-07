@@ -236,7 +236,6 @@ resource "azurerm_kubernetes_cluster" "i" {
         vm_size = var.cluster.node_size
         zones = var.cluster.zones
         os_disk_type = var.cluster.os_disk_type
-        os_disk_size_gb = var.cluster.os_disk_size_gb
         vnet_subnet_id = one(azurerm_virtual_network.i.subnet[*].id)
         max_pods = 100
     }
