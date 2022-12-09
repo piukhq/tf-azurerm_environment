@@ -70,11 +70,11 @@ variable "cluster" {
         cidr = string
         api_ip_ranges = optional(list(string))
         updates = string
-        sku = string
-        node_max_count = number
-        zones = optional(list(string), null)
-        os_disk_type = optional(string, "Managed")
-        node_size = string
+        sku = optional(string, "Free")
+        node_max_count = optional(number, 6)
+        zones = optional(list(string), ["1","2","3"])
+        os_disk_type = optional(string, "Ephemeral")
+        node_size = optional(string, "Standard_E4ads_v5")
         maintenance_day = string
         iam = map(object({
             object_id = string

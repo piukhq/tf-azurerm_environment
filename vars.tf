@@ -149,9 +149,9 @@ variable aks {
         cidr = string
         api_ip_ranges = optional(list(string))
         updates = string
-        sku = string
-        node_max_count = number
-        node_size = string
+        sku = optional(string)
+        node_max_count = optional(number)
+        node_size = optional(string)
         maintenance_day = string
         zones = optional(list(string))
         os_disk_type = optional(string)
