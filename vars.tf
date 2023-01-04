@@ -172,13 +172,13 @@ variable aks {
         })
         firewall = object({
             rule_priority = number
-            ingress = object({
+            ingress = optional(object({
                 source_ip_groups = optional(list(string))
                 source_addr = optional(list(string))
                 public_ip = string
                 http_port = number
                 https_port = number
-            })
+            }), null)
             config = object({
                 resource_group = object({
                     name = string

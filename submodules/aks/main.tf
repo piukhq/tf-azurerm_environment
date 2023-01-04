@@ -41,13 +41,13 @@ variable "common" {
 variable "firewall" {
     type = object({
         rule_priority = number
-        ingress = object({
+        ingress = optional(object({
             source_ip_groups = optional(list(string))
             source_addr = optional(list(string))
             public_ip = string
             http_port = number
             https_port = number
-        })
+        }))
         config = object({
             resource_group = object({
                 name = string
@@ -183,6 +183,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "secondary" {
 
 resource "azurerm_dns_a_record" "wildcard" {
     provider = azurerm.core
+    count = var.firewall.ingress != null ? 1 : 0
 
     name = "*.${var.cluster.name}.${var.common.resource_group.location}"
     zone_name = var.common.dns.public.name
@@ -475,6 +476,7 @@ resource "azurerm_firewall_network_rule_collection" "i" {
 
 resource "azurerm_firewall_nat_rule_collection" "i" {
     provider = azurerm.core
+    count = var.firewall.ingress != null ? 1 : 0
 
     name = "ingress-${local.full_name}"
     azure_firewall_name = var.firewall.config.firewall.name
