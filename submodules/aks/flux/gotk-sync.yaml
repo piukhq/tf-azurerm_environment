@@ -46,3 +46,4 @@ data:
   cluster_name: $CLUSTER_NAME
   kube_api_host: $KUBE_API_HOST
   loadbalancer_ip: $LOADBALANCER_IP
+  privatelink_ip: ${PRIVATELINK_IP}

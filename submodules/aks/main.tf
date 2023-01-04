@@ -512,6 +512,7 @@ resource "null_resource" "flux_install" {
         export CLUSTER_NAME="${var.cluster.name}"
         export KUBE_API_HOST="${azurerm_kubernetes_cluster.i.kube_admin_config.0.host}"
         export LOADBALANCER_IP="${cidrhost(var.cluster.cidr, 65534)}"
+        export PRIVATELINK_IP="${cidrhost(var.cluster.cidr, 65533)}"
 
         envsubst < ${path.module}/flux/gotk-sync.yaml > /tmp/${local.full_name}.yaml
 
