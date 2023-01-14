@@ -45,23 +45,7 @@ resource "azurerm_monitor_diagnostic_setting" "redis" {
     target_resource_id = azurerm_redis_cache.redis[each.key].id
     log_analytics_workspace_id = var.loganalytics_id
 
-    log {
-        category = "ConnectedClientList"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-
-    metric {
-        category = "AllMetrics"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
+    enabled_log { category = "ConnectedClientList" }
 }
 
 resource "azurerm_role_assignment" "redis_iam" {

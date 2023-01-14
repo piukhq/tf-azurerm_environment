@@ -10,23 +10,7 @@ resource "azurerm_monitor_diagnostic_setting" "vnet" {
     target_resource_id = azurerm_virtual_network.vnet.id
     log_analytics_workspace_id = var.loganalytics_id
 
-    log {
-        category = "VMProtectionAlerts"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-
-    metric {
-        category = "AllMetrics"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
+    enabled_log { category = "VMProtectionAlerts" }
 }
 
 resource "azurerm_subnet" "postgres" {

@@ -80,35 +80,9 @@ resource "azurerm_monitor_diagnostic_setting" "add_kv" {
 
     name = "diags"
     target_resource_id = azurerm_key_vault.add_kv[each.key].id
-    log_analytics_destination_type = "AzureDiagnostics"
     log_analytics_workspace_id = var.loganalytics_id
 
-    log {
-        category = "AuditEvent"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-
-    log {
-        category = "AzurePolicyEvaluationDetails"
-        enabled  = false
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-
-    metric {
-        category = "AllMetrics"
-        enabled = false
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
+    enabled_log { category = "AuditEvent" }
 }
 
 resource "azurerm_key_vault_access_policy" "add_admin" {

@@ -291,103 +291,11 @@ resource "azurerm_monitor_diagnostic_setting" "i" {
     target_resource_id = azurerm_kubernetes_cluster.i.id
     log_analytics_workspace_id = var.common.loganalytics_id
 
-    log {
-        category = "kube-apiserver"
-        enabled = true
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-    log {
-        category = "kube-audit"
-        enabled = false
-        retention_policy {
-            days = 30
-            enabled = true
-        }
-    }
-    log {
-        category = "kube-audit-admin"
-        enabled = true
-        retention_policy {
-            days = 30
-            enabled = true
-        }
-    }
-    log {
-        category = "kube-controller-manager"
-        enabled = true
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-    log {
-        category = "kube-scheduler"
-        enabled = true
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-    log {
-        category = "cluster-autoscaler"
-        enabled = false
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-    log {
-        category = "cloud-controller-manager"
-        enabled = false
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-    log {
-        category = "guard"
-        enabled = false
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-    log {
-        category = "csi-azuredisk-controller"
-        enabled = false
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-    log {
-        category = "csi-azurefile-controller"
-        enabled = false
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-    log {
-        category = "csi-snapshot-controller"
-        enabled = false
-        retention_policy {
-            days = 90
-            enabled = true
-        }
-    }
-
-    metric {
-        category = "AllMetrics"
-        enabled = false
-        retention_policy {
-            days = 0
-            enabled = false
-        }
-    }
+    enabled_log { category = "kube-apiserver" }
+    enabled_log { category = "kube-audit" }
+    enabled_log { category = "kube-audit-admin" }
+    enabled_log { category = "kube-controller-manager" }
+    enabled_log { category = "kube-scheduler" }
 }
 
 data azurerm_resource_group "node" {

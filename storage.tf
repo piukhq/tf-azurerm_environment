@@ -83,44 +83,7 @@ resource "azurerm_monitor_diagnostic_setting" "storage" {
     target_resource_id = "${azurerm_storage_account.storage[each.key].id}/blobServices/default"
     log_analytics_workspace_id = var.loganalytics_id
 
-    log {
-        category = "StorageRead"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-    log {
-        category = "StorageWrite"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-    log {
-        category = "StorageDelete"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
-    metric {
-        category = "Capacity"
-        enabled  = true
-        retention_policy {
-            days = 0
-            enabled = false
-        }
-    }
-    metric {
-        category = "Transaction"
-        enabled = true
-        retention_policy {
-            days    = 0
-            enabled = false
-        }
-    }
+    enabled_log { category = "StorageRead" }
+    enabled_log { category = "StorageWrite" }
+    enabled_log { category = "StorageDelete" }
 }
