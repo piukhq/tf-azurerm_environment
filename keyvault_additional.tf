@@ -80,6 +80,7 @@ resource "azurerm_monitor_diagnostic_setting" "add_kv" {
 
     name = "diags"
     target_resource_id = azurerm_key_vault.add_kv[each.key].id
+    log_analytics_destination_type = "AzureDiagnostics"
     log_analytics_workspace_id = var.loganalytics_id
 
     log {
