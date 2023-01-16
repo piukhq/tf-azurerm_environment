@@ -12,7 +12,7 @@ resource "azurerm_monitor_diagnostic_setting" "vnet" {
 
     enabled_log { category = "VMProtectionAlerts" }
     metric {
-        category = "All Metrics"
+        category = "AllMetrics"
         enabled = false
     }
 }

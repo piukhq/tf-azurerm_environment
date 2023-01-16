@@ -84,7 +84,7 @@ resource "azurerm_monitor_diagnostic_setting" "add_kv" {
 
     enabled_log { category = "AuditEvent" }
     metric {
-        category = "All Metrics"
+        category = "AllMetrics"
         enabled = false
     }
 }

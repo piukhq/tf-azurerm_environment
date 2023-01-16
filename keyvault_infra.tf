@@ -18,7 +18,7 @@ resource "azurerm_monitor_diagnostic_setting" "infra_keyvault" {
 
     enabled_log { category = "AuditEvent" }
     metric {
-        category = "All Metrics"
+        category = "AllMetrics"
         enabled = false
     }
 }

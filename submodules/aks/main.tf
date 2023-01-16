@@ -295,7 +295,7 @@ resource "azurerm_monitor_diagnostic_setting" "i" {
     enabled_log { category = "kube-controller-manager" }
     enabled_log { category = "kube-scheduler" }
     metric {
-        category = "All Metrics"
+        category = "AllMetrics"
         enabled = false
     }
 }
