@@ -292,8 +292,6 @@ resource "azurerm_monitor_diagnostic_setting" "i" {
     log_analytics_workspace_id = var.common.loganalytics_id
 
     enabled_log { category = "kube-apiserver" }
-    enabled_log { category = "kube-audit" }
-    enabled_log { category = "kube-audit-admin" }
     enabled_log { category = "kube-controller-manager" }
     enabled_log { category = "kube-scheduler" }
 }
