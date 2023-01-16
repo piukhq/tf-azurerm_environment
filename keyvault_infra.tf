@@ -17,6 +17,10 @@ resource "azurerm_monitor_diagnostic_setting" "infra_keyvault" {
     log_analytics_workspace_id = var.loganalytics_id
 
     enabled_log { category = "AuditEvent" }
+    metric {
+        category = "All Metrics"
+        enabled = false
+    }
 }
 
 resource "azurerm_key_vault_access_policy" "infra_terraform" {

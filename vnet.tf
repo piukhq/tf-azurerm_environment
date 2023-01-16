@@ -11,6 +11,10 @@ resource "azurerm_monitor_diagnostic_setting" "vnet" {
     log_analytics_workspace_id = var.loganalytics_id
 
     enabled_log { category = "VMProtectionAlerts" }
+    metric {
+        category = "All Metrics"
+        enabled = false
+    }
 }
 
 resource "azurerm_subnet" "postgres" {

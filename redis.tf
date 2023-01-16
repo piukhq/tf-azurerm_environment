@@ -46,6 +46,10 @@ resource "azurerm_monitor_diagnostic_setting" "redis" {
     log_analytics_workspace_id = var.loganalytics_id
 
     enabled_log { category = "ConnectedClientList" }
+    metric {
+        category = "All Metrics"
+        enabled = false
+    }
 }
 
 resource "azurerm_role_assignment" "redis_iam" {
