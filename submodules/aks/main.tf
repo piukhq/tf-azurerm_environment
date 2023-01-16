@@ -226,7 +226,6 @@ resource "azurerm_kubernetes_cluster" "i" {
     dns_prefix = local.full_name
     sku_tier = var.cluster.sku
     azure_policy_enabled = true
-    api_server_authorized_ip_ranges = var.cluster.api_ip_ranges
 
     default_node_pool {
         name = "default"
@@ -238,6 +237,10 @@ resource "azurerm_kubernetes_cluster" "i" {
         os_disk_type = var.cluster.os_disk_type
         vnet_subnet_id = one(azurerm_virtual_network.i.subnet[*].id)
         max_pods = 100
+    }
+
+    api_server_access_profile {
+        authorized_ip_ranges = var.cluster.api_ip_ranges
     }
 
     network_profile {
