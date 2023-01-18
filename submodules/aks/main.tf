@@ -68,7 +68,7 @@ variable "cluster" {
     type = object({
         name = string
         cidr = string
-        api_ip_ranges = optional(list(string))
+        api_ip_ranges = optional(list(string), [])
         updates = string
         sku = optional(string, "Free")
         node_max_count = optional(number, 6)
@@ -239,8 +239,14 @@ resource "azurerm_kubernetes_cluster" "i" {
         max_pods = 100
     }
 
-    api_server_access_profile {
-        authorized_ip_ranges = var.cluster.api_ip_ranges
+    dynamic api_server_access_profile {
+        # Workaround described in:
+        # https://github.com/hashicorp/terraform-provider-azurerm/issues/20037#issuecomment-1384846081
+        # If a proper fix has been applied, we can refactor this
+        for_each = toset(length(var.cluster.api_ip_ranges) != 0 ? ["dummy"] : [])
+        content {
+            authorized_ip_ranges = var.cluster.api_ip_ranges
+        }
     }
 
     network_profile {
