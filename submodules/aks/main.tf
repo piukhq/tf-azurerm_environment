@@ -33,8 +33,8 @@ variable "common" {
                 name = string
                 resource_group = string
             })
-        aad_admin_group_object_ids = list(string)
         })
+        aad_admin_group_object_ids = list(string)
         registries = map(string)
     })
 }
