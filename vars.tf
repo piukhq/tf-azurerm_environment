@@ -155,6 +155,7 @@ variable aks {
         maintenance_day = string
         zones = optional(list(string))
         os_disk_type = optional(string)
+        aad_admin_group_object_ids = optional(list(string), [ "0140ccf4-f68c-4daa-b531-97e5292ec364" ])
         iam = map(object({
             object_id = string
             role = string

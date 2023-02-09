@@ -33,6 +33,7 @@ variable "common" {
                 name = string
                 resource_group = string
             })
+        aad_admin_group_object_ids = list(string)
         })
         registries = map(string)
     })
@@ -284,7 +285,7 @@ resource "azurerm_kubernetes_cluster" "i" {
     azure_active_directory_role_based_access_control {
         managed = true
         azure_rbac_enabled = true
-        admin_group_object_ids = [ "aac28b59-8ac3-4443-bccc-3fb820165a08" ] # DevOps
+        admin_group_object_ids = var.common.aad_admin_group_object_ids
     }
 
     maintenance_window {
