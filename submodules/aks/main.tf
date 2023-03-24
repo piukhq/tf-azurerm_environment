@@ -254,7 +254,6 @@ resource "azurerm_kubernetes_cluster" "i" {
         network_plugin = "azure"
         service_cidr = "172.16.0.0/16"
         dns_service_ip = "172.16.0.10"
-        docker_bridge_cidr = "172.17.0.0/16"
         outbound_type = "userDefinedRouting"
         load_balancer_sku = "standard"
     }
