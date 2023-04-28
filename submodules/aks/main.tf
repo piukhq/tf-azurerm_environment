@@ -232,7 +232,7 @@ resource "azurerm_kubernetes_cluster" "i" {
         name = "default"
         enable_auto_scaling = true
         max_count = var.cluster.node_max_count
-        min_count = 3
+        min_count = 1
         vm_size = var.cluster.node_size
         zones = var.cluster.zones
         os_disk_type = var.cluster.os_disk_type
