@@ -52,7 +52,7 @@ module "aks" {
         api_ip_ranges = each.value.api_ip_ranges
         updates = each.value.updates
         sku = each.value.sku
-        node_max_count = each.value.node_max_count
+        node_count = each.value.node_count
         node_size = each.value.node_size
         maintenance_day = each.value.maintenance_day
         iam = each.value.iam

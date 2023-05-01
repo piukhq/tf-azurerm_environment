@@ -72,7 +72,7 @@ variable "cluster" {
         api_ip_ranges = optional(list(string), [])
         updates = string
         sku = optional(string, "Free")
-        node_max_count = optional(number, 6)
+        node_count = optional(number, 1)
         zones = optional(list(string), ["1","2","3"])
         os_disk_type = optional(string, "Ephemeral")
         node_size = optional(string, "Standard_E4ads_v5")
@@ -231,8 +231,7 @@ resource "azurerm_kubernetes_cluster" "i" {
     default_node_pool {
         name = "default"
         enable_auto_scaling = true
-        max_count = var.cluster.node_max_count
-        min_count = 1
+        node_count = var.cluster.node_count
         vm_size = var.cluster.node_size
         zones = var.cluster.zones
         os_disk_type = var.cluster.os_disk_type
@@ -274,11 +273,6 @@ resource "azurerm_kubernetes_cluster" "i" {
         ssh_key {
             key_data = file("~/.ssh/id_bink_azure_terraform.pub")
         }
-    }
-
-    auto_scaler_profile {
-        balance_similar_node_groups = true
-        skip_nodes_with_local_storage = false
     }
 
     azure_active_directory_role_based_access_control {
