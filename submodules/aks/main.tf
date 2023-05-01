@@ -226,7 +226,7 @@ resource "azurerm_kubernetes_cluster" "i" {
     node_resource_group = "${local.full_name}-nodes"
     dns_prefix = local.full_name
     sku_tier = var.cluster.sku
-    azure_policy_enabled = true
+    azure_policy_enabled = false
 
     default_node_pool {
         name = "default"
