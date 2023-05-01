@@ -230,7 +230,7 @@ resource "azurerm_kubernetes_cluster" "i" {
 
     default_node_pool {
         name = "default"
-        enable_auto_scaling = true
+        enable_auto_scaling = false
         node_count = var.cluster.node_count
         vm_size = var.cluster.node_size
         zones = var.cluster.zones
